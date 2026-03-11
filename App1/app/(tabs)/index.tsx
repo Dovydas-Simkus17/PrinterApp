@@ -1,42 +1,96 @@
-import { View, Text, StyleSheet} from 'react-native'
-import * as React from 'react';
-
+import { View, Text, TextInput, StyleSheet} from 'react-native'
+import React from 'react';
+import { Colors } from '@/app/theme';
+import { useColorScheme } from '@/hooks/use-color-scheme';
 
 // ----------------------- Page -----------------------
 
-function index() {
+function Index() {
+
+  const colorScheme = useColorScheme();
+  const C = colorScheme === 'dark' ? Colors.dark : Colors.light;
+
+
+  const styles = makeStyles(C);
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.Text}>index</Text>
+    <View style={styles.screen}>
+
+      {/* ── Header ── */}
+      <View style={styles.header}>
+        <View>
+          <Text style={styles.headerText}>Text</Text>
+        </View>
+      </View>
+
+      {/* ── Divider ── */}
+      <View style={styles.divider} />
+
+      {/* ── Text area ── */}
+      <TextInput
+        style={styles.textBox}
+        multiline
+        placeholder="Text Input"
+        placeholderTextColor={C.placeholder}
+        textAlignVertical="top"
+        autoCapitalize="sentences"
+        selectionColor={C.accent}
+        scrollEnabled={true}
+      />
+
     </View>
-  )
+  );
 }
-export default  index;
 
-
-
-
-
-
+export default Index;
 
 // ----------------------- StyleSheet -----------------------
 
-const styles = StyleSheet.create({
-
-
-
-
-  container: {
+const makeStyles = (C: typeof Colors.light) => StyleSheet.create({
+  
+  screen: {
     flex: 1,
-    flexDirection: 'column',
+    backgroundColor: C.background,
   },
 
-  Text: {
-    fontSize: 20,
-    color: 'white',
-    fontWeight: 'bold',
-    textAlign: 'center',
+  // Header
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-end',
+    paddingHorizontal: 28,
+    paddingTop: 20,
+    paddingBottom: 16,
   },
-})
+  headerText: {
+    fontSize: 26,
+    fontWeight: '700',
+    color: C.text,
+    letterSpacing: -0.5,
+    fontFamily: 'Georgia',
+  },
+
+  // Divider
+  divider: {
+    height: 1,
+    backgroundColor: C.border,
+    marginHorizontal: 28,
+  },
+
+  // Text Box
+  textBox: {
+    flex: 1,
+    paddingHorizontal: 28,
+    paddingTop: 24,
+    paddingBottom: 12,
+    fontSize: 17,
+    lineHeight: 28,
+    color: C.text,
+    fontFamily: 'Georgia',
+  },
+
+
+
+});
 
 // ----------------------- /// -----------------------
