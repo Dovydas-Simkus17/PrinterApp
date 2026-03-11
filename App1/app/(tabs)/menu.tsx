@@ -5,7 +5,7 @@ import { useColorScheme } from '@/hooks/use-color-scheme';
 
 // ----------------------- Page -----------------------
 
-function Index() {
+function Menu() {
 
   const colorScheme = useColorScheme();
   const C = colorScheme === 'dark' ? Colors.dark : Colors.light;
@@ -42,7 +42,7 @@ function Index() {
   );
 }
 
-export default Index;
+export default Menu;
 
 // ----------------------- StyleSheet -----------------------
 
