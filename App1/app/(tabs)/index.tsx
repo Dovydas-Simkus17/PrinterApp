@@ -1,8 +1,6 @@
 import { View, Text, StyleSheet} from 'react-native'
 import * as React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+
 
 // ----------------------- Page -----------------------
 
@@ -13,30 +11,11 @@ function index() {
     </View>
   )
 }
+export default  index;
 
-export default index
 
 
-const Stack = createNativeStackNavigator();
-const Tab = createBottomTabNavigator();
 
-function SecondComponent() {
-  return (
-    <Tab.Navigator>
-      <Tab.Screen name="Test" component={index} />
-    </Tab.Navigator>
-  );
-}
-
-function FirstComponent() {
-  return (
-    <NavigationContainer> 
-      <Stack.Navigator>
-        <Stack.Screen name="Home" component={index} />
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
-}
 
 
 
