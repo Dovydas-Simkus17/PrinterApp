@@ -10,7 +10,7 @@ function Index() {
 
   const colorScheme = useColorScheme();
   const C = colorScheme === 'dark' ? Colors.dark : Colors.light;
-
+  
 
   const styles = makeStyles(C);
 
