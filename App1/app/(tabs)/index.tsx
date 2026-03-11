@@ -1,4 +1,5 @@
-import { View, Text, TextInput, StyleSheet} from 'react-native'
+import { Keyboard, TouchableWithoutFeedback, View, Text, TextInput, StyleSheet} from 'react-native'
+import { SafeAreaView } from "react-native-safe-area-context";
 import React from 'react';
 import { Colors } from '@/app/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
@@ -14,6 +15,7 @@ function Index() {
   const styles = makeStyles(C);
 
   return (
+    <SafeAreaView style={{ flex: 1, backgroundColor: C.background }}>
     <View style={styles.screen}>
 
       {/* ── Header ── */}
@@ -27,18 +29,20 @@ function Index() {
       <View style={styles.divider} />
 
       {/* ── Text area ── */}
-      <TextInput
-        style={styles.textBox}
-        multiline
-        placeholder="Text Input"
-        placeholderTextColor={C.placeholder}
-        textAlignVertical="top"
-        autoCapitalize="sentences"
-        selectionColor={C.accent}
-        scrollEnabled={true}
-      />
-
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+        <TextInput
+          style={styles.textBox}
+          multiline
+          placeholder="Text Input"
+          placeholderTextColor={C.placeholder}
+          textAlignVertical="top"
+          autoCapitalize="sentences"
+          selectionColor={C.accent}
+          scrollEnabled={true}
+        />
+      </TouchableWithoutFeedback>
     </View>
+    </SafeAreaView>
   );
 }
 
