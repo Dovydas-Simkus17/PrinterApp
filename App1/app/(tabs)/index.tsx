@@ -29,7 +29,7 @@ function Index() {
       <View style={styles.divider} />
 
       {/* ── Text area ── */}
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+      {/* <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}> */}
         <TextInput
           style={styles.textBox}
           multiline
@@ -40,7 +40,7 @@ function Index() {
           selectionColor={C.accent}
           scrollEnabled={true}
         />
-      </TouchableWithoutFeedback>
+      {/* </TouchableWithoutFeedback> */}
     </View>
     </SafeAreaView>
   );
