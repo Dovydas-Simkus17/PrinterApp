@@ -1,6 +1,6 @@
-import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native'
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Modal, Alert, Pressable} from 'react-native';
 import { SafeAreaView } from "react-native-safe-area-context";
-import * as React from 'react';
+import React, {useState} from 'react';
 import { Colors } from '@/app/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { categories } from './menu';
@@ -22,8 +22,39 @@ type Category = {
 // ----------------------- Item List Display -----------------------
 
 function ItemRow({ item, styles }: { item: Item; styles: ReturnType<typeof makeStyles> }) {
+
+	// Popup
+	const [modalVisible, setModalVisible] = useState(false);
+
 	return (
 		<View style={styles.itemRow}>
+
+
+			{/* ── Popup ── */}
+				<Modal
+					animationType="slide"
+					transparent={true}
+					visible={modalVisible}
+					onRequestClose={() => {
+						Alert.alert('Modal has been closed.');
+						setModalVisible(!modalVisible);
+				}}>
+					
+					<View style={styles.centeredView}>
+						<View style={styles.modalView}>
+							<Text style={styles.modalText}>Hello World!</Text>
+							{/* Add Button */}
+							<TouchableOpacity style={styles.addButton}>
+								<Text style={styles.addButtonText} 
+									onPress={() => setModalVisible(!modalVisible)}>
+									+ 
+								</Text>
+							</TouchableOpacity>
+						</View>
+					</View>
+				</Modal>
+
+
 			{/* Name */}
 			<Text style={styles.itemName}>{item.name}</Text>
 			{/* Allergens Loop */}
@@ -38,7 +69,9 @@ function ItemRow({ item, styles }: { item: Item; styles: ReturnType<typeof makeS
 			)}
 			{/* Add Button */}
 			<TouchableOpacity style={styles.addButton}>
-				<Text style={styles.addButtonText}> + </Text>
+				<Text style={styles.addButtonText} onPress={() => setModalVisible(true)}>
+					+ 
+				</Text>
 			</TouchableOpacity>
 		</View>
 	);
@@ -68,6 +101,10 @@ function CategoryList({ category, styles }: { category: Category; styles: Return
 	);
 }
 
+
+
+
+
 // ----------------------- Page -----------------------
 
 function Index() {
@@ -77,6 +114,7 @@ function Index() {
 	const C = colorScheme === 'dark' ? Colors.dark : Colors.light;
 	const styles = makeStyles(C);
 
+	
 
 	// main
 	return (
@@ -90,6 +128,9 @@ function Index() {
 
 				{/* ── Divider ── */}
 				<View style={styles.divider} />
+
+				
+
 
 				{/* ── Category List ── */}
 				{categories.map((category) => (
@@ -196,6 +237,48 @@ const makeStyles = (C: typeof Colors.light) => StyleSheet.create({
 		fontWeight: '700',
 		textAlign: 'center',
 		lineHeight: 24,
+	},
+
+	// Modal
+	centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+	},
+	modalView: {
+		margin: 20,
+		backgroundColor: 'white',
+		borderRadius: 20,
+		padding: 35,
+		alignItems: 'center',
+		shadowColor: '#000',
+		shadowOffset: {
+		width: 0,
+		height: 2,
+		},
+		shadowOpacity: 0.25,
+		shadowRadius: 4,
+		elevation: 5,
+	},
+	button: {
+		borderRadius: 20,
+		padding: 10,
+		elevation: 2,
+	},
+	buttonOpen: {
+		backgroundColor: '#F194FF',
+	},
+	buttonClose: {
+		backgroundColor: '#2196F3',
+	},
+	textStyle: {
+		color: 'white',
+		fontWeight: 'bold',
+		textAlign: 'center',
+	},
+	modalText: {
+		marginBottom: 15,
+		textAlign: 'center',
 	},
 
 });
