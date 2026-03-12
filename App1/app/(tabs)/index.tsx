@@ -3,7 +3,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import * as React from 'react';
 import { Colors } from '@/app/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
-import { mainsItems, sidesItems } from './menu';
+import { categories, mainsItems, sidesItems } from './menu';
 
 // ----------------------- Data -----------------------
 
@@ -62,6 +62,14 @@ function Index() {
 				{/* ── Divider ── */}
 				<View style={styles.divider} />
 
+        {/* ── Category Name ── */}
+
+        <View style={styles.header}>
+          <View>
+            <Text style={styles.headerText}>{categories[0].name}</Text>
+          </View>
+        </View>
+
 				{/* ── Item List ── */}
 				<FlatList
 
@@ -74,6 +82,11 @@ function Index() {
 					)}
 
 				/>
+        <View style={styles.header}>
+          <View>
+            <Text style={styles.headerText}>{categories[1].name}</Text>
+          </View>
+        </View>
         <FlatList
 
 					data={sidesItems}

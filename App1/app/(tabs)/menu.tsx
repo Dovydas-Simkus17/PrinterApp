@@ -24,6 +24,11 @@ export const sidesItems: Item[] = [
     { id: '2', name: 'Gloop', allergens: ['dairy', 'dovydas', 'gluten', 'soy', 'bogdanee'] },
 ];
 
+export const categories = [
+    { id: '1', name: 'Mains'},
+    { id: '2', name: 'Sides'},
+];
+
 function Menu() {
 
   const colorScheme = useColorScheme();
