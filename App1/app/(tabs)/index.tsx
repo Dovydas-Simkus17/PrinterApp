@@ -8,12 +8,13 @@ import { useColorScheme } from '@/hooks/use-color-scheme';
 
 function Index() {
 
+  // styling
   const colorScheme = useColorScheme();
   const C = colorScheme === 'dark' ? Colors.dark : Colors.light;
-  
-
   const styles = makeStyles(C);
 
+
+  // render
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: C.background }}>
     <View style={styles.screen}>
@@ -28,19 +29,6 @@ function Index() {
       {/* ── Divider ── */}
       <View style={styles.divider} />
 
-      {/* ── Text area ── */}
-      {/* <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}> */}
-        <TextInput
-          style={styles.textBox}
-          multiline
-          placeholder="Text Input"
-          placeholderTextColor={C.placeholder}
-          textAlignVertical="top"
-          autoCapitalize="sentences"
-          selectionColor={C.accent}
-          scrollEnabled={true}
-        />
-      {/* </TouchableWithoutFeedback> */}
     </View>
     </SafeAreaView>
   );
@@ -80,21 +68,7 @@ const makeStyles = (C: typeof Colors.light) => StyleSheet.create({
     backgroundColor: C.border,
     marginHorizontal: 28,
   },
-
-  // Text Box
-  textBox: {
-    flex: 1,
-    paddingHorizontal: 28,
-    paddingTop: 24,
-    paddingBottom: 12,
-    fontSize: 17,
-    lineHeight: 28,
-    color: C.text,
-    fontFamily: 'Georgia',
-  },
-
-
-
+  
 });
 
 // ----------------------- /// -----------------------
