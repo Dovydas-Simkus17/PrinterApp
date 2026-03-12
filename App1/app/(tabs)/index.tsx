@@ -3,19 +3,15 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import * as React from 'react';
 import { Colors } from '@/app/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
+import { mainsItems, sidesItems } from './menu';
 
 // ----------------------- Data -----------------------
 
 type Item = {
-	id: string;
-	name: string;
-	allergens: string[];
+    id: string;
+    name: string;
+    allergens: string[];
 };
-
-const items: Item[] = [
-	{ id: '1', name: 'Club Sandwich', allergens: [] },
-	{ id: '2', name: 'Goop Sandwich', allergens: ['dairy', 'dovydas', 'gluten', 'soy', 'bogdand'] },
-];
 
 // ----------------------- Sub-components -----------------------
 
@@ -62,7 +58,18 @@ function Index() {
 				{/* ── Item List ── */}
 				<FlatList
 
-					data={items}
+					data={mainsItems}
+					keyExtractor={(item) => item.id}
+					contentContainerStyle={styles.listContent}
+
+					renderItem={({ item }) => (
+						<ItemRow item={item} styles={styles} />
+					)}
+
+				/>
+        <FlatList
+
+					data={sidesItems}
 					keyExtractor={(item) => item.id}
 					contentContainerStyle={styles.listContent}
 

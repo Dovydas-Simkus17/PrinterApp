@@ -7,6 +7,23 @@ import { useColorScheme } from '@/hooks/use-color-scheme';
 
 // ----------------------- Page -----------------------
 
+
+type Item = {
+    id: string;
+    name: string;
+    allergens: string[];
+};
+
+export const mainsItems: Item[] = [
+    { id: '1', name: 'Club Sandwich', allergens: [] },
+    { id: '2', name: 'Goop Sandwich', allergens: ['dairy', 'dovydas', 'gluten', 'soy', 'bogdand'] },
+];
+
+export const sidesItems: Item[] = [
+    { id: '1', name: 'Fries', allergens: [] },
+    { id: '2', name: 'Goop Sandwich', allergens: ['dairy', 'dovydas', 'gluten', 'soy', 'bogdanee'] },
+];
+
 function Menu() {
 
   const colorScheme = useColorScheme();
@@ -18,17 +35,7 @@ function Menu() {
 
   const styles = makeStyles(C);
 
-  const mainsItems = [
-        { id: 1, name: "Club Sandwich", allergens: ["milk", "nuts"] },
-        { id: 2, name: "Club Sandwich", allergens: ["milk", "nuts"] },
-        { id: 3, name: "Club Sandwich", allergens: ["milk", "nuts"] }
-    ];
-
-    const sidesItems = [
-        { id: 4, name: "Club Sandwich", allergens: ["milk", "nuts"] },
-        { id: 5, name: "Blob Sandwich", allergens: ["egg", "egg"] },
-        { id: 6, name: "Club Sandwich", allergens: ["milk", "nuts"] }
-    ];
+    
 
     const filteredMains = mainsItems.filter(item =>
         item.name.toLowerCase().includes(searchQuery.toLowerCase())
