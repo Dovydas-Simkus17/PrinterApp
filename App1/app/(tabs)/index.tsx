@@ -109,7 +109,7 @@ function CategoryList({ category, styles }: { category: Category; styles: Return
 						<Text style={styles.headerText}>{category.name}</Text>
 					</View>
 				</View>
-			{/* Allergens Loop */}
+			{/* FlatList the items */}
 			<FlatList
 				data={category.items}
 				keyExtractor={(item) => item.id}
