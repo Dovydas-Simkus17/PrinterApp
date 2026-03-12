@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, FlatList } from 'react-native'
+import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native'
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as React from 'react';
 import { Colors } from '@/app/theme';
@@ -17,12 +17,13 @@ const items: Item[] = [
 	{ id: '2', name: 'Goop Sandwich', allergens: ['dairy', 'dovydas', 'gluten', 'soy', 'bogdand'] },
 ];
 
-// ----------------------- Sub-components -----------------------
-
+// ----------------------- Item List Display -----------------------
 function ItemRow({ item, styles }: { item: Item; styles: ReturnType<typeof makeStyles> }) {
 	return (
 		<View style={styles.itemRow}>
+			{/* Name */}
 			<Text style={styles.itemName}>{item.name}</Text>
+			{/* Allergens Loop */}
 			{item.allergens.length > 0 && (
 				<View style={styles.allergyRow}>
 					{item.allergens.map((i) => (
@@ -31,7 +32,11 @@ function ItemRow({ item, styles }: { item: Item; styles: ReturnType<typeof makeS
 						</View>
 					))}
 				</View>
-		)}
+			)}
+			{/* Add Button */}
+			<TouchableOpacity style={styles.addButton}>
+				<Text style={styles.addButtonText}> + </Text>
+			</TouchableOpacity>
 		</View>
 	);
 }
@@ -153,6 +158,25 @@ const makeStyles = (C: typeof Colors.light) => StyleSheet.create({
 		fontWeight: '500',
 		textTransform: 'capitalize',
 		fontFamily: 'sans-serif',
+	},
+
+	// add button
+	addButton: {
+		position: 'absolute',
+		right: 0,
+		top: '50%',
+		transform: [{ translateY: -12 }],
+		width: 24,
+		height: 24,
+		borderRadius: 12,
+		backgroundColor: C.accent,
+	},
+	addButtonText: {
+		color: C.text,
+		fontSize: 16,
+		fontWeight: '700',
+		textAlign: 'center',
+		lineHeight: 24,
 	},
 
 });
