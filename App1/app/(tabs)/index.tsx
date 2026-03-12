@@ -45,7 +45,7 @@ function ItemRow({ item, styles }: { item: Item; styles: ReturnType<typeof makeS
 							{/* Add Button */}
 							<TouchableOpacity style={styles.addButton}>
 								<Text style={styles.addButtonText} 
-									onPress={() => setModalVisible(!modalVisible)}>
+								onPress={() => setModalVisible(!modalVisible)}>
 									+ 
 								</Text>
 							</TouchableOpacity>
