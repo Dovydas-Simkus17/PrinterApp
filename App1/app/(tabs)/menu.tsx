@@ -13,9 +13,32 @@ function Menu() {
   const C = colorScheme === 'dark' ? Colors.dark : Colors.light;
   const [mainsOpen, setMainsOpen] = useState(true);
   const [sidesOpen, setSidesOpen] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
 
 
   const styles = makeStyles(C);
+
+  const mainsItems = [
+        { id: 1, title: "Club Sandwich", description: "Club Sandwich" },
+        { id: 2, title: "Club Sandwich", description: "Club Sandwich" },
+        { id: 3, title: "Club Sandwich", description: "Club Sandwich" }
+    ];
+
+    const sidesItems = [
+        { id: 4, title: "Club Sandwich", description: "Club Sandwich" },
+        { id: 5, title: "Blob Sandwich", description: "Club Sandwich" },
+        { id: 6, title: "Club Sandwich", description: "Club Sandwich" }
+    ];
+
+    const filteredMains = mainsItems.filter(item =>
+        item.title.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+    const filteredSides = sidesItems.filter(item =>
+        item.title.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+  
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: C.background }}>
@@ -34,7 +57,6 @@ function Menu() {
             <View style={styles.divider} />
 
             {/* ── Main area ── */}
-            <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
                 <View style={{ marginHorizontal: 28, marginTop: 24 }}>
                     <View style={{ flexDirection: 'row', alignItems: 'center'}}>
                         <Text style={{ color: C.text, fontSize: 16, fontFamily: 'Georgia'}}>Add Category + </Text>
@@ -52,6 +74,8 @@ function Menu() {
                             placeholder="Search..."
                             placeholderTextColor={C.placeholder}
                             selectionColor={C.accent}
+                            value={searchQuery}
+                            onChangeText={setSearchQuery}
                         />
                         </View>
                             
@@ -72,22 +96,14 @@ function Menu() {
                                     color={C.text}
                                 />
                             </Pressable>
-                            {mainsOpen && (
-                                <>
-                                    <View style={[styles.box, {backgroundColor: C.placeholder}]}>
-                                        <Text style={[styles.categoryHeader]}>Club Sandwich</Text>
-                                        <Text style={[styles.categoryBody]}>Club Sandwich</Text>
+                            {mainsOpen &&
+                                filteredMains.map((item) => (
+                                    <View key={item.id} style={[styles.box, {backgroundColor: C.placeholder}]}>
+                                    <Text style={styles.categoryHeader}>{item.title}</Text>
+                                    <Text style={styles.categoryBody}>{item.description}</Text>
                                     </View>
-                                    <View style={[styles.box, {backgroundColor: C.placeholder}]}>
-                                        <Text style={[styles.categoryHeader]}>Club Sandwich</Text>
-                                        <Text style={[styles.categoryBody]}>Club Sandwich</Text>
-                                    </View>
-                                    <View style={[styles.box, {backgroundColor: C.placeholder}]}>
-                                        <Text style={[styles.categoryHeader]}>Club Sandwich</Text>
-                                        <Text style={[styles.categoryBody]}>Club Sandwich</Text>
-                                    </View>
-                                </>
-                            )}
+                                ))
+                            }
                             <Pressable
                                 onPress={() => setSidesOpen(!sidesOpen)}
                                 style={{ flexDirection: "row", alignItems: "center", justifyContent: "flex-start" }}
@@ -102,25 +118,17 @@ function Menu() {
                                     color={C.text}
                                 />
                             </Pressable>
-                            {sidesOpen && (
-                                <>
-                                    <View style={[styles.box, {backgroundColor: C.placeholder}]}>
-                                        <Text style={[styles.categoryHeader]}>Club Sandwich</Text>
-                                        <Text style={[styles.categoryBody]}>Club Sandwich</Text>
+                            {sidesOpen &&
+                                filteredSides.map((item) => (
+                                    <View key={item.id} style={[styles.box, {backgroundColor: C.placeholder}]}>
+                                    <Text style={styles.categoryHeader}>{item.title}</Text>
+                                    <Text style={styles.categoryBody}>{item.description}</Text>
                                     </View>
-                                    <View style={[styles.box, {backgroundColor: C.placeholder}]}>
-                                        <Text style={[styles.categoryHeader]}>Club Sandwich</Text>
-                                        <Text style={[styles.categoryBody]}>Club Sandwich</Text>
-                                    </View>
-                                    <View style={[styles.box, {backgroundColor: C.placeholder}]}>
-                                        <Text style={[styles.categoryHeader]}>Club Sandwich</Text>
-                                        <Text style={[styles.categoryBody]}>Club Sandwich</Text>
-                                    </View>
-                                </>
-                            )}
+                                ))
+                            }
                         </View>
                 </View>
-            </TouchableWithoutFeedback>
+
         </View>
     </SafeAreaView>
   );
