@@ -18,8 +18,6 @@ export const mainsItems: Item[] = [
     { id: '1', name: 'Club Sandwich', allergens: ["gluten", "dairy"] },
     { id: '2', name: 'Goop Sandwich', allergens: ['dairy', 'dovydas', 'gluten', 'soy', 'bogdand'] },
     { id: '3', name: 'Goop Sandwich', allergens: ['dairy', 'dovydas', 'gluten', 'soy', 'bogdand'] },
-    { id: '3', name: 'Goop Sandwich', allergens: ['dairy', 'dovydas', 'gluten', 'soy', 'bogdand'] },
-    { id: '3', name: 'Goop Sandwich', allergens: ['dairy', 'dovydas', 'gluten', 'soy', 'bogdand'] },
     
     
 ];
