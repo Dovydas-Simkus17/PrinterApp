@@ -15,13 +15,13 @@ type Item = {
 };
 
 export const mainsItems: Item[] = [
-    { id: '1', name: 'Club Sandwich', allergens: [] },
+    { id: '1', name: 'Club Sandwich', allergens: ["gluten", "dairy"] },
     { id: '2', name: 'Goop Sandwich', allergens: ['dairy', 'dovydas', 'gluten', 'soy', 'bogdand'] },
 ];
 
 export const sidesItems: Item[] = [
-    { id: '1', name: 'Fries', allergens: [] },
-    { id: '2', name: 'Goop Sandwich', allergens: ['dairy', 'dovydas', 'gluten', 'soy', 'bogdanee'] },
+    { id: '1', name: 'Fries', allergens: ["gluten"] },
+    { id: '2', name: 'Gloop', allergens: ['dairy', 'dovydas', 'gluten', 'soy', 'bogdanee'] },
 ];
 
 function Menu() {
