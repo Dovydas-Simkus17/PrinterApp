@@ -14,7 +14,7 @@ type Item = {
 
 const items: Item[] = [
 	{ id: '1', name: 'Club Sandwich', allergens: [] },
-	{ id: '2', name: 'Goop Sandwich', allergens: ['dairy'] },
+	{ id: '2', name: 'Goop Sandwich', allergens: ['dairy', 'dovydas', 'gluten', 'soy', 'bogdand'] },
 ];
 
 // ----------------------- Sub-components -----------------------
