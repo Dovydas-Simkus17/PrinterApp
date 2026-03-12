@@ -19,63 +19,78 @@ type Category = {
 	items: Item[];
 };
 
+type CartEntry = {
+	item: Item;
+	note: string;
+};
+
 // ----------------------- Item List Display -----------------------
 
-function ItemRow({ item, styles }: { item: Item; styles: ReturnType<typeof makeStyles> }) {
-
+function ItemRow({ item, styles, onAdd }: { item: Item; styles: ReturnType<typeof makeStyles>; onAdd: (note: string) => void }) {
+	
 	// Popup
 	const [modalVisible, setModalVisible] = useState(false);
+	const [note, setNote] = useState('');
+
+	const handleSave = () => {
+		onAdd(note);
+		setNote('');
+		setModalVisible(false);
+	};
+
 
 	return (
 		<View style={styles.itemRow}>
 
 
 			{/* ── Popup ── */}
-				<Modal
+			<Modal
 
-					animationType="slide"
-					transparent={true}
-					visible={modalVisible}
-					onRequestClose={() => {setModalVisible(!modalVisible);}}>
+				animationType="slide"
+				transparent={true}
+				visible={modalVisible}
+				onRequestClose={() => {setModalVisible(!modalVisible);}}>
 
-					{/* displayed content */}
-					<View style={styles.centeredView}>
-						<View style={styles.modalView}>
+				{/* displayed content */}
+				<View style={styles.centeredView}>
+					<View style={styles.modalView}>
 
-							{/* Item */}
-							<Text style={styles.headerText}>{item.name}</Text>
+						{/* Item */}
+						<Text style={styles.headerText}>{item.name}</Text>
 
-							{/* Allergens Loop */}
-							{item.allergens.length > 0 && (
-								<View style={styles.allergyRow}>
-									{item.allergens.map((i) => (
-										<View key={i} style={styles.allergyChip}>
-											<Text style={styles.allergyText}>{i}</Text>
-										</View>
-									))}
-								</View>
-							)}
-
-							{/* Notes input */}
-							<TextInput
-								style={styles.notesInput}
-								placeholder="Add a note..."
-								multiline
-							/>
-
-							{/* Add Button */}
-							<View style={{ width: '100%', alignItems: 'flex-end' }}>
-								<TouchableOpacity
-									style={styles.modalButton}
-									onPress={() => setModalVisible(false)}
-								>
-									<Text style={styles.addButtonText}>Save</Text>
-								</TouchableOpacity>
+						{/* Allergens Loop */}
+						{item.allergens.length > 0 && (
+							<View style={styles.allergyRow}>
+								{item.allergens.map((i) => (
+									<View key={i} style={styles.allergyChip}>
+										<Text style={styles.allergyText}>{i}</Text>
+									</View>
+								))}
 							</View>
+						)}
 
+						{/* Notes input */}
+						<TextInput
+							style={styles.notesInput}
+							placeholder="Add a note..."
+							value={note}
+							onChangeText={setNote}
+							multiline
+						/>
+
+						{/* Save Button */}
+						<View style={{ width: '100%', alignItems: 'flex-end' }}>
+							<TouchableOpacity
+								style={styles.modalButton}
+								onPress={handleSave}
+							>
+								<Text style={styles.addButtonText}>Save</Text>
+							</TouchableOpacity>
 						</View>
+
 					</View>
-				</Modal>
+				</View>
+			</Modal>
 
 
 			{/* Name */}
@@ -91,24 +106,22 @@ function ItemRow({ item, styles }: { item: Item; styles: ReturnType<typeof makeS
 				</View>
 			)}
 			{/* Add Button */}
-			<TouchableOpacity style={styles.addButton}>
-				<Text style={styles.addButtonText} onPress={() => setModalVisible(true)}>
-					+ 
-				</Text>
+			<TouchableOpacity style={styles.addButton} onPress={() => setModalVisible(true)}>
+				<Text style={styles.addButtonText}> + </Text>
 			</TouchableOpacity>
 		</View>
 	);
 }
 
-function CategoryList({ category, styles }: { category: Category; styles: ReturnType<typeof makeStyles> }) {
+function CategoryList({ category, styles, onAdd }: { category: Category; styles: ReturnType<typeof makeStyles>; onAdd: (item: Item, note: string) => void }) {
 	return (
 		<View style={styles.itemRow}>
+
 			{/* Name */}
 			<View style={styles.header}>
-					<View>
-						<Text style={styles.headerText}>{category.name}</Text>
-					</View>
+					<Text style={styles.headerText}>{category.name}</Text>
 				</View>
+
 			{/* FlatList the items */}
 			<FlatList
 				data={category.items}
@@ -116,7 +129,7 @@ function CategoryList({ category, styles }: { category: Category; styles: Return
 				contentContainerStyle={styles.listContent}
 
 				renderItem={({ item }) => (
-					<ItemRow item={item} styles={styles} />
+					<ItemRow item={item} styles={styles} onAdd={(note) => onAdd(item, note)} />
 				)}
 
 			/>
@@ -125,6 +138,55 @@ function CategoryList({ category, styles }: { category: Category; styles: Return
 }
 
 
+
+// ----------------------- Cart Modal -----------------------
+
+function CartModal({ visible, cart, onClose, styles }: {
+	visible: boolean;
+	cart: CartEntry[];
+	onClose: () => void;
+	styles: ReturnType<typeof makeStyles>;
+}) {
+	return (
+		<Modal
+			animationType="slide"
+			transparent={true}
+			visible={visible}
+			onRequestClose={onClose}
+		>
+			<View style={styles.centeredView}>
+				<View style={[styles.modalView, { height: '60%' }]}>
+
+					{/* Name */}
+					<Text style={styles.headerText}>Cart</Text>
+					<view style={styles.itemDivider} />
+
+					{/* FlatList the items */}
+					<FlatList
+						data={cart}
+						keyExtractor={(_, i) => String(i)}
+						ItemSeparatorComponent={() => <View style={styles.itemDivider} />}
+
+						renderItem={({ item: entry }) => (
+							<View style={styles.cartRow}>
+								<Text style={styles.itemName}>{entry.item.name}</Text>
+								{entry.note ? <Text style={styles.itemNote}>{entry.note}</Text> : null}
+							</View>
+						)}
+					/>
+					
+					{/* button */}
+					<View style={{ width: '100%', alignItems: 'flex-end', marginTop: 12 }}>
+						<TouchableOpacity style={styles.modalButton} onPress={onClose}>
+							<Text style={styles.addButtonText}>Close</Text>
+						</TouchableOpacity>
+					</View>
+
+				</View>
+			</View>
+		</Modal>
+	);
+}
 
 
 
@@ -137,7 +199,13 @@ function Index() {
 	const C = colorScheme === 'dark' ? Colors.dark : Colors.light;
 	const styles = makeStyles(C);
 
-	
+	// Popup
+	const [cart, setCart] = useState<CartEntry[]>([]);
+	const [cartVisible, setCartVisible] = useState(false);
+
+	const addToCart = (item: Item, note: string) => {
+		setCart((prev) => [...prev, { item, note }]);
+	};
 
 	// main
 	return (
@@ -146,19 +214,28 @@ function Index() {
 
 				{/* ── Header ── */}
 				<View style={styles.header}>
-				<	Text style={styles.headerText}>Order</Text>
+					<Text style={styles.headerText}>Order</Text>
 				</View>
 
 				{/* ── Divider ── */}
 				<View style={styles.divider} />
 
-				
-
 
 				{/* ── Category List ── */}
 				{categories.map((category) => (
-					<CategoryList key={category.id} category={category} styles={styles} />
+					<CategoryList key={category.id} category={category} styles={styles} onAdd={addToCart} />
 				))}
+
+				{/* ── Cart Modal ── */}
+				<CartModal visible={cartVisible} cart={cart} onClose={() => setCartVisible(false)} styles={styles} />
+
+				{/* ── Floating Cart Button ── */}
+				<TouchableOpacity style={styles.cartButton} onPress={() => setCartVisible(true)}>
+					
+					{/* put icon in later */}
+					<Text style={styles.headerText}> ☰ </Text>
+
+				</TouchableOpacity>
 
 			</View>
 		</SafeAreaView>
@@ -269,7 +346,6 @@ const makeStyles = (C: typeof Colors.light) => StyleSheet.create({
 		justifyContent: 'center',
 		alignItems: 'center',
 	},
-	// Replace modalView style
 	modalView: {
 		backgroundColor: C.surface,
 		margin: 10,
@@ -285,16 +361,13 @@ const makeStyles = (C: typeof Colors.light) => StyleSheet.create({
 		borderRadius: 5,
 		borderColor: C.accent,
 	},
-	// Modal button
 	modalButton: {
 		borderRadius: 5,
 		borderWidth: 1,
 		borderColor: C.accent,
 		backgroundColor: C.accent,
 		padding: 10,
-		fontFamily: 'sans-serif',
 	},
-	// Modal input
 	notesInput: {
 		marginVertical: 28,
 		borderWidth: 3,
@@ -306,6 +379,29 @@ const makeStyles = (C: typeof Colors.light) => StyleSheet.create({
 		fontSize: 14,
 		minHeight: 60,
 		textAlignVertical: 'top',
+	},
+
+	// Floating cart button
+	cartButton: {
+		position: 'absolute',
+		bottom: 32,
+		right: 28,
+		width: 56,
+		height: 56,
+		borderRadius: 28,
+		backgroundColor: C.accent,
+		justifyContent: 'center',
+		alignItems: 'center',
+	},
+
+	// Cart 
+	cartRow: {
+		paddingVertical: 8,
+		gap: 2,
+	},
+	itemNote: {
+		fontSize: 12,
+		color: C.inkMuted,
 	},
 
 });
