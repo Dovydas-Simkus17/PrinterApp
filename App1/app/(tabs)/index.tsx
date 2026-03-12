@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Modal, Alert, Pressable} from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Modal, TextInput} from 'react-native';
 import { SafeAreaView } from "react-native-safe-area-context";
 import React, {useState} from 'react';
 import { Colors } from '@/app/theme';
@@ -32,23 +32,47 @@ function ItemRow({ item, styles }: { item: Item; styles: ReturnType<typeof makeS
 
 			{/* ── Popup ── */}
 				<Modal
+
 					animationType="slide"
 					transparent={true}
 					visible={modalVisible}
-					onRequestClose={() => {
-						Alert.alert('Modal has been closed.');
-						setModalVisible(!modalVisible);
-				}}>
+					onRequestClose={() => {setModalVisible(!modalVisible);}}>
+
+					{/* displayed content */}
 					<View style={styles.centeredView}>
 						<View style={styles.modalView}>
-							<Text style={styles.modalText}>Hello World!</Text>
+
+							{/* Item */}
+							<Text style={styles.headerText}>{item.name}</Text>
+
+							{/* Allergens Loop */}
+							{item.allergens.length > 0 && (
+								<View style={styles.allergyRow}>
+									{item.allergens.map((i) => (
+										<View key={i} style={styles.allergyChip}>
+											<Text style={styles.allergyText}>{i}</Text>
+										</View>
+									))}
+								</View>
+							)}
+
+							{/* Notes input */}
+							<TextInput
+								style={styles.notesInput}
+								placeholder="Add a note..."
+								multiline
+							/>
+
 							{/* Add Button */}
-							<TouchableOpacity style={styles.addButton}>
-								<Text style={styles.addButtonText} 
-								onPress={() => setModalVisible(!modalVisible)}>
-									+ 
-								</Text>
-							</TouchableOpacity>
+							<View style={{ width: '100%', alignItems: 'flex-end' }}>
+								<TouchableOpacity
+									style={styles.modalButton}
+									onPress={() => setModalVisible(false)}
+								>
+									<Text style={styles.addButtonText}>Save</Text>
+								</TouchableOpacity>
+							</View>
+
 						</View>
 					</View>
 				</Modal>
@@ -174,6 +198,7 @@ const makeStyles = (C: typeof Colors.light) => StyleSheet.create({
 		height: 1,
 		backgroundColor: C.border,
 		marginHorizontal: 28,
+		marginVertical: 8,
 	},
 
 	// List
@@ -207,7 +232,7 @@ const makeStyles = (C: typeof Colors.light) => StyleSheet.create({
 		paddingHorizontal: 10,
 		paddingVertical: 4,
 		backgroundColor: C.accentLight,
-		borderRadius: 10,
+		borderRadius: 5,
 		borderWidth: 1,
 		borderColor: C.border,
 	},
@@ -227,7 +252,7 @@ const makeStyles = (C: typeof Colors.light) => StyleSheet.create({
 		transform: [{ translateY: -12 }],
 		width: 24,
 		height: 24,
-		borderRadius: 12,
+		borderRadius: 10,
 		backgroundColor: C.accent,
 	},
 	addButtonText: {
@@ -240,44 +265,47 @@ const makeStyles = (C: typeof Colors.light) => StyleSheet.create({
 
 	// Modal
 	centeredView: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-	},
-	modalView: {
-		margin: 20,
-		backgroundColor: 'white',
-		borderRadius: 20,
-		padding: 35,
+		flex: 1,
+		justifyContent: 'center',
 		alignItems: 'center',
+	},
+	// Replace modalView style
+	modalView: {
+		backgroundColor: C.surface,
+		margin: 10,
+		padding: 35,
+		width: '92%',
+		height: '30%',
 		shadowColor: '#000',
-		shadowOffset: {
-		width: 0,
-		height: 2,
-		},
+		shadowOffset: { width: 0, height: 2 },
 		shadowOpacity: 0.25,
 		shadowRadius: 4,
 		elevation: 5,
+		borderWidth: 1,
+		borderRadius: 5,
+		borderColor: C.accent,
 	},
-	button: {
-		borderRadius: 20,
+	// Modal button
+	modalButton: {
+		borderRadius: 5,
+		borderWidth: 1,
+		borderColor: C.accent,
+		backgroundColor: C.accent,
 		padding: 10,
-		elevation: 2,
+		fontFamily: 'sans-serif',
 	},
-	buttonOpen: {
-		backgroundColor: '#F194FF',
-	},
-	buttonClose: {
-		backgroundColor: '#2196F3',
-	},
-	textStyle: {
-		color: 'white',
-		fontWeight: 'bold',
-		textAlign: 'center',
-	},
-	modalText: {
-		marginBottom: 15,
-		textAlign: 'center',
+	// Modal input
+	notesInput: {
+		marginVertical: 28,
+		borderWidth: 3,
+		borderRadius: 5,
+		borderColor: C.accent,
+		padding: 10,
+		color: C.text,
+		fontFamily: 'Georgia',
+		fontSize: 14,
+		minHeight: 60,
+		textAlignVertical: 'top',
 	},
 
 });
