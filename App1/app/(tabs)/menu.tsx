@@ -19,23 +19,23 @@ function Menu() {
   const styles = makeStyles(C);
 
   const mainsItems = [
-        { id: 1, title: "Club Sandwich", description: "Club Sandwich" },
-        { id: 2, title: "Club Sandwich", description: "Club Sandwich" },
-        { id: 3, title: "Club Sandwich", description: "Club Sandwich" }
+        { id: 1, name: "Club Sandwich", allergens: ["milk", "nuts"] },
+        { id: 2, name: "Club Sandwich", allergens: ["milk", "nuts"] },
+        { id: 3, name: "Club Sandwich", allergens: ["milk", "nuts"] }
     ];
 
     const sidesItems = [
-        { id: 4, title: "Club Sandwich", description: "Club Sandwich" },
-        { id: 5, title: "Blob Sandwich", description: "Club Sandwich" },
-        { id: 6, title: "Club Sandwich", description: "Club Sandwich" }
+        { id: 4, name: "Club Sandwich", allergens: ["milk", "nuts"] },
+        { id: 5, name: "Blob Sandwich", allergens: ["egg", "egg"] },
+        { id: 6, name: "Club Sandwich", allergens: ["milk", "nuts"] }
     ];
 
     const filteredMains = mainsItems.filter(item =>
-        item.title.toLowerCase().includes(searchQuery.toLowerCase())
+        item.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
     const filteredSides = sidesItems.filter(item =>
-        item.title.toLowerCase().includes(searchQuery.toLowerCase())
+        item.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
   
@@ -99,8 +99,8 @@ function Menu() {
                             {mainsOpen &&
                                 filteredMains.map((item) => (
                                     <View key={item.id} style={[styles.box, {backgroundColor: C.placeholder}]}>
-                                    <Text style={styles.categoryHeader}>{item.title}</Text>
-                                    <Text style={styles.categoryBody}>{item.description}</Text>
+                                    <Text style={styles.categoryHeader}>{item.name}</Text>
+                                    <Text style={styles.categoryBody}>{item.allergens.join(", ")}</Text>
                                     </View>
                                 ))
                             }
@@ -121,8 +121,8 @@ function Menu() {
                             {sidesOpen &&
                                 filteredSides.map((item) => (
                                     <View key={item.id} style={[styles.box, {backgroundColor: C.placeholder}]}>
-                                    <Text style={styles.categoryHeader}>{item.title}</Text>
-                                    <Text style={styles.categoryBody}>{item.description}</Text>
+                                        <Text style={styles.categoryHeader}>{item.name}</Text>
+                                        <Text style={styles.categoryBody}>{item.allergens.join(", ")}</Text>
                                     </View>
                                 ))
                             }
