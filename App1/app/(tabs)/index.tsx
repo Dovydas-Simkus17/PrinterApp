@@ -39,7 +39,6 @@ function ItemRow({ item, styles }: { item: Item; styles: ReturnType<typeof makeS
 						Alert.alert('Modal has been closed.');
 						setModalVisible(!modalVisible);
 				}}>
-					
 					<View style={styles.centeredView}>
 						<View style={styles.modalView}>
 							<Text style={styles.modalText}>Hello World!</Text>
