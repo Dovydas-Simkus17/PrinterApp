@@ -3,7 +3,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import * as React from 'react';
 import { Colors } from '@/app/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
-import { categories, mainsItems, sidesItems } from './menu';
+import { categories } from './menu';
 
 // ----------------------- Data -----------------------
 
@@ -13,6 +13,11 @@ type Item = {
     allergens: string[];
 };
 
+type Category = {
+	id: string;
+	name: string;
+	items: Item[];
+};
 
 // ----------------------- Item List Display -----------------------
 
@@ -39,6 +44,30 @@ function ItemRow({ item, styles }: { item: Item; styles: ReturnType<typeof makeS
 	);
 }
 
+function CategoryList({ category, styles }: { category: Category; styles: ReturnType<typeof makeStyles> }) {
+	return (
+		<View style={styles.itemRow}>
+			{/* Name */}
+			<View style={styles.header}>
+					<View>
+						<Text style={styles.headerText}>{category.name}</Text>
+					</View>
+				</View>
+			{/* Allergens Loop */}
+			<FlatList
+				data={category.items}
+				keyExtractor={(item) => item.id}
+				contentContainerStyle={styles.listContent}
+
+				renderItem={({ item }) => (
+					<ItemRow item={item} styles={styles} />
+				)}
+
+			/>
+		</View>
+	);
+}
+
 // ----------------------- Page -----------------------
 
 function Index() {
@@ -56,48 +85,16 @@ function Index() {
 
 				{/* ── Header ── */}
 				<View style={styles.header}>
-				<Text style={styles.headerText}>Order</Text>
+				<	Text style={styles.headerText}>Order</Text>
 				</View>
 
 				{/* ── Divider ── */}
 				<View style={styles.divider} />
 
-        {/* ── Category Name ── */}
-
-        <View style={styles.header}>
-          <View>
-            <Text style={styles.headerText}>{categories[0].name}</Text>
-          </View>
-        </View>
-
-				{/* ── Item List ── */}
-				<FlatList
-
-					data={mainsItems}
-					keyExtractor={(item) => item.id}
-					contentContainerStyle={styles.listContent}
-
-					renderItem={({ item }) => (
-						<ItemRow item={item} styles={styles} />
-					)}
-
-				/>
-        <View style={styles.header}>
-          <View>
-            <Text style={styles.headerText}>{categories[1].name}</Text>
-          </View>
-        </View>
-        <FlatList
-
-					data={sidesItems}
-					keyExtractor={(item) => item.id}
-					contentContainerStyle={styles.listContent}
-
-					renderItem={({ item }) => (
-						<ItemRow item={item} styles={styles} />
-					)}
-
-				/>
+				{/* ── Category List ── */}
+				{categories.map((category) => (
+					<CategoryList key={category.id} category={category} styles={styles} />
+				))}
 
 			</View>
 		</SafeAreaView>
