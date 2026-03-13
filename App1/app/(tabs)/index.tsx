@@ -4,15 +4,8 @@ import React, {useState} from 'react';
 import { Colors } from '@/app/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { categories } from './menu';
-
-
-// import { File, FileSystem, Directory, Paths, Sharing } from '@/lib/filesystem';	
-
-// import { File, Directory, Paths } from 'expo-file-system';
 import * as FileSystem from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
-import * as Print from 'expo-print';
-
 
 // ----------------------- Data -----------------------
 
