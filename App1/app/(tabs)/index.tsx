@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Modal, TextInput} from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Modal, TextInput, Platform} from 'react-native';
 import { SafeAreaView } from "react-native-safe-area-context";
 import React, {useState} from 'react';
 import { Colors } from '@/app/theme';
@@ -8,7 +8,7 @@ import { categories } from './menu';
 
 // import { File, FileSystem, Directory, Paths, Sharing } from '@/lib/filesystem';	
 
-import { File, Directory, Paths } from 'expo-file-system';
+// import { File, Directory, Paths } from 'expo-file-system';
 import * as FileSystem from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
 import * as Print from 'expo-print';
@@ -233,19 +233,33 @@ function Index() {
 	};
 	const printCart = async () => {
 		if (cart.length === 0) return;
-		
+
 		try {
-			const path = `${FileSystem.cacheDirectory}order.txt`;
-			await FileSystem.writeAsStringAsync(path, 'heloooo');
-			await Sharing.shareAsync(path, {
-				mimeType: 'text/plain',
-				dialogTitle: 'Save Order',
-				UTI: 'public.plain-text',
-			});
+			const lines = cart.map((entry, i) => {
+				const note = entry.note ? `\n   Note: ${entry.note}` : '';
+				return `${i + 1}. ${entry.item.name}${note}`;
+			}).join('\n');
+
+			const content = `Order \n ${'-'.repeat(30)} \n ${lines}`;
+
+			if (Platform.OS === 'web') {
+				const blob = new Blob([content], { type: 'text/plain' });
+				const url = URL.createObjectURL(blob);
+				const a = document.createElement('a');
+				a.href = url;
+				a.download = 'order.txt';
+				a.click();
+				URL.revokeObjectURL(url);
+			} else {
+				const path = `${FileSystem.cacheDirectory}order.txt`;
+				await FileSystem.writeAsStringAsync(path, content, {
+					encoding: FileSystem.EncodingType.UTF8,
+				});
+				await Sharing.shareAsync(path);
+			}
 		} catch (e) {
 			console.error('Failed to save order:', e);
 		}
-
 	};
 
 
