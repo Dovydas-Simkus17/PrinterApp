@@ -5,6 +5,15 @@ import { Colors } from '@/app/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { categories } from './menu';
 
+
+// import { File, FileSystem, Directory, Paths, Sharing } from '@/lib/filesystem';	
+
+import { File, Directory, Paths } from 'expo-file-system';
+import * as FileSystem from 'expo-file-system';
+import * as Sharing from 'expo-sharing';
+import * as Print from 'expo-print';
+
+
 // ----------------------- Data -----------------------
 
 type Item = {
@@ -23,6 +32,7 @@ type CartEntry = {
 	item: Item;
 	note: string;
 };
+
 
 // ----------------------- Item List Display -----------------------
 
@@ -141,11 +151,12 @@ function CategoryList({ category, styles, onAdd }: { category: Category; styles:
 
 // ----------------------- Cart Modal -----------------------
 
-function CartModal({ visible, cart, onClose, onRemove, styles }: {
+function CartModal({ visible, cart, onClose, onRemove, onPrint, styles }: {
 	visible: boolean;
 	cart: CartEntry[];
 	onClose: () => void;
 	onRemove: (index: number) => void;
+	onPrint: () => void;
 	styles: ReturnType<typeof makeStyles>;
 }) {
 	return (
@@ -188,7 +199,7 @@ function CartModal({ visible, cart, onClose, onRemove, styles }: {
 						</TouchableOpacity>
 					</View>
 					<View style={{ width: '100%', alignItems: 'flex-end', marginTop: 12 }}>
-						<TouchableOpacity style={styles.modalButton} onPress={onClose}>
+						<TouchableOpacity style={styles.modalButton} onPress={onPrint}>
 							<Text style={styles.addButtonText}>Print</Text>
 						</TouchableOpacity>
 					</View>
@@ -220,6 +231,23 @@ function Index() {
 	const removeFromCart = (index: number) => {
 		setCart((prev) => prev.filter((_, i) => i !== index));
 	};
+	const printCart = async () => {
+		if (cart.length === 0) return;
+		
+		try {
+			const path = `${FileSystem.cacheDirectory}order.txt`;
+			await FileSystem.writeAsStringAsync(path, 'heloooo');
+			await Sharing.shareAsync(path, {
+				mimeType: 'text/plain',
+				dialogTitle: 'Save Order',
+				UTI: 'public.plain-text',
+			});
+		} catch (e) {
+			console.error('Failed to save order:', e);
+		}
+
+	};
+
 
 	// main
 	return (
@@ -241,7 +269,7 @@ function Index() {
 				))}
 
 				{/* ── Cart Modal ── */}
-				<CartModal visible={cartVisible} cart={cart} onClose={() => setCartVisible(false)} onRemove={removeFromCart} styles={styles} />
+				<CartModal visible={cartVisible} cart={cart} onClose={() => setCartVisible(false)} onRemove={removeFromCart} onPrint={printCart} styles={styles} />
 
 				{/* ── Floating Cart Button ── */}
 				<TouchableOpacity style={styles.cartButton} onPress={() => setCartVisible(true)}>
