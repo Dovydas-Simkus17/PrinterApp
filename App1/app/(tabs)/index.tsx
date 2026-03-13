@@ -151,7 +151,9 @@ function CartModal({ visible, cart, onClose, onRemove, onPrint, styles }: {
 	onRemove: (index: number) => void;
 	onPrint: () => void;
 	styles: ReturnType<typeof makeStyles>;
+	orderNo: string;
 }) {
+	const [orderNo, setOrderNo] = useState('');
 	return (
 		<Modal
 			animationType="slide"
@@ -165,6 +167,15 @@ function CartModal({ visible, cart, onClose, onRemove, onPrint, styles }: {
 					{/* Name */}
 					<Text style={styles.headerText}>Cart</Text>
 					<View style={styles.itemDivider} />
+
+					{/* Order Number */}
+					<TextInput
+							style={styles.orderNumberInput}
+							placeholder="Order Number..."
+							value={orderNo}
+							onChangeText={setOrderNo}
+							multiline={false}
+						/>
 
 					{/* FlatList the items */}
 					<FlatList
@@ -277,7 +288,7 @@ function Index() {
 				))}
 
 				{/* ── Cart Modal ── */}
-				<CartModal visible={cartVisible} cart={cart} onClose={() => setCartVisible(false)} onRemove={removeFromCart} onPrint={printCart} styles={styles} />
+				<CartModal visible={cartVisible} cart={cart} onClose={() => setCartVisible(false)} onRemove={removeFromCart} onPrint={printCart} styles={styles} orderNo={''} />
 
 				{/* ── Floating Cart Button ── */}
 				<TouchableOpacity style={styles.cartButton} onPress={() => setCartVisible(true)}>
@@ -335,6 +346,7 @@ const makeStyles = (C: typeof Colors.light) => StyleSheet.create({
 		paddingBottom: 32,
 	},
 	itemDivider: {
+		marginVertical: 8,
 		height: 1,
 		backgroundColor: C.border,
 	},
@@ -380,12 +392,13 @@ const makeStyles = (C: typeof Colors.light) => StyleSheet.create({
 		width: 24,
 		height: 24,
 		borderRadius: 10,
-		backgroundColor: C.accent,
+		backgroundColor: C.placeholder,
 	},
 	addButtonText: {
 		color: C.text,
 		fontSize: 16,
 		fontWeight: '700',
+		fontFamily: 'Georgia',
 		textAlign: 'center',
 		lineHeight: 24,
 	},
@@ -415,7 +428,7 @@ const makeStyles = (C: typeof Colors.light) => StyleSheet.create({
 		borderRadius: 5,
 		borderWidth: 1,
 		borderColor: C.accent,
-		backgroundColor: C.accent,
+		backgroundColor: C.placeholder,
 		padding: 10,
 		alignItems: 'flex-end',
 		justifyContent: 'center',
@@ -443,9 +456,10 @@ const makeStyles = (C: typeof Colors.light) => StyleSheet.create({
 		width: 56,
 		height: 56,
 		borderRadius: 28,
-		backgroundColor: C.accent,
+		backgroundColor: C.placeholder,
 		justifyContent: 'center',
 		alignItems: 'center',
+		
 	},
 
 	// Cart 
@@ -456,6 +470,16 @@ const makeStyles = (C: typeof Colors.light) => StyleSheet.create({
 	itemNote: {
 		fontSize: 12,
 		color: C.inkMuted,
+	},
+	orderNumberInput: {
+		marginVertical: 20,
+		borderBottomWidth: 1,
+		borderColor: C.border,
+		color: C.text,
+		fontFamily: 'Georgia',
+		fontSize: 14,
+		minHeight: 40,
+		width: 130,
 	},
 
 });

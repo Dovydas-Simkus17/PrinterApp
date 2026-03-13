@@ -113,7 +113,7 @@ function Menu() {
                             </Pressable>
                             {mainsOpen &&
                                 filteredMains.map((item) => (
-                                    <View key={item.id} style={[styles.box, {backgroundColor: C.placeholder}]}>
+                                    <View key={item.id} style={styles.box}>
                                     <Text style={styles.categoryHeader}>{item.name}</Text>
                                     <Text style={styles.categoryBody}>{item.allergens.join(", ")}</Text>
                                     </View>
@@ -135,7 +135,7 @@ function Menu() {
                             </Pressable>
                             {sidesOpen &&
                                 filteredSides.map((item) => (
-                                    <View key={item.id} style={[styles.box, {backgroundColor: C.placeholder}]}>
+                                    <View key={item.id} style={styles.box}>
                                         <Text style={styles.categoryHeader}>{item.name}</Text>
                                         <Text style={styles.categoryBody}>{item.allergens.join(", ")}</Text>
                                     </View>
@@ -218,9 +218,12 @@ const makeStyles = (C: typeof Colors.light) => StyleSheet.create({
     },
 
     box: {
+        backgroundColor: C.accentLight,
         marginVertical: 8,
         padding: 10,
         borderRadius: 10,
+        borderWidth: 1,
+		borderColor: C.border,
     },
 
     //Text Styles
