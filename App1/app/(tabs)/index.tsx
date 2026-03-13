@@ -1,37 +1,245 @@
-import { Keyboard, TouchableWithoutFeedback, View, Text, TextInput, StyleSheet} from 'react-native'
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Modal, TextInput} from 'react-native';
 import { SafeAreaView } from "react-native-safe-area-context";
-import React from 'react';
+import React, {useState} from 'react';
 import { Colors } from '@/app/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
+import { categories } from './menu';
+
+// ----------------------- Data -----------------------
+
+type Item = {
+    id: string;
+    name: string;
+    allergens: string[];
+};
+
+type Category = {
+	id: string;
+	name: string;
+	items: Item[];
+};
+
+type CartEntry = {
+	item: Item;
+	note: string;
+};
+
+// ----------------------- Item List Display -----------------------
+
+function ItemRow({ item, styles, onAdd }: { item: Item; styles: ReturnType<typeof makeStyles>; onAdd: (note: string) => void }) {
+	
+	// Popup
+	const [modalVisible, setModalVisible] = useState(false);
+	const [note, setNote] = useState('');
+
+	const handleSave = () => {
+		onAdd(note);
+		setNote('');
+		setModalVisible(false);
+	};
+
+
+	return (
+		<View style={styles.itemRow}>
+
+
+			{/* ── Popup ── */}
+			<Modal
+
+				animationType="slide"
+				transparent={true}
+				visible={modalVisible}
+				onRequestClose={() => {setModalVisible(!modalVisible);}}>
+
+				{/* displayed content */}
+				<View style={styles.centeredView}>
+					<View style={styles.modalView}>
+
+						{/* Item */}
+						<Text style={styles.headerText}>{item.name}</Text>
+
+						{/* Allergens Loop */}
+						{item.allergens.length > 0 && (
+							<View style={styles.allergyRow}>
+								{item.allergens.map((i) => (
+									<View key={i} style={styles.allergyChip}>
+										<Text style={styles.allergyText}>{i}</Text>
+									</View>
+								))}
+							</View>
+						)}
+
+						{/* Notes input */}
+						<TextInput
+							style={styles.notesInput}
+							placeholder="Add a note..."
+							value={note}
+							onChangeText={setNote}
+							multiline
+						/>
+
+						{/* Save Button */}
+						<View style={{ width: '100%', alignItems: 'flex-end' }}>
+							<TouchableOpacity
+								style={styles.modalButton}
+								onPress={handleSave}
+							>
+								<Text style={styles.addButtonText}>Save</Text>
+							</TouchableOpacity>
+						</View>
+
+					</View>
+				</View>
+			</Modal>
+
+
+			{/* Name */}
+			<Text style={styles.itemName}>{item.name}</Text>
+			{/* Allergens Loop */}
+			{item.allergens.length > 0 && (
+				<View style={styles.allergyRow}>
+					{item.allergens.map((i) => (
+						<View key={i} style={styles.allergyChip}>
+							<Text style={styles.allergyText}>{i}</Text>
+						</View>
+					))}
+				</View>
+			)}
+			{/* Add Button */}
+			<TouchableOpacity style={styles.addButton} onPress={() => setModalVisible(true)}>
+				<Text style={styles.addButtonText}> + </Text>
+			</TouchableOpacity>
+		</View>
+	);
+}
+
+function CategoryList({ category, styles, onAdd }: { category: Category; styles: ReturnType<typeof makeStyles>; onAdd: (item: Item, note: string) => void }) {
+	return (
+		<View style={styles.itemRow}>
+
+			{/* Name */}
+			<View style={styles.header}>
+					<Text style={styles.headerText}>{category.name}</Text>
+				</View>
+
+			{/* FlatList the items */}
+			<FlatList
+				data={category.items}
+				keyExtractor={(item) => item.id}
+				contentContainerStyle={styles.listContent}
+
+				renderItem={({ item }) => (
+					<ItemRow item={item} styles={styles} onAdd={(note) => onAdd(item, note)} />
+				)}
+
+			/>
+		</View>
+	);
+}
+
+
+
+// ----------------------- Cart Modal -----------------------
+
+function CartModal({ visible, cart, onClose, styles }: {
+	visible: boolean;
+	cart: CartEntry[];
+	onClose: () => void;
+	styles: ReturnType<typeof makeStyles>;
+}) {
+	return (
+		<Modal
+			animationType="slide"
+			transparent={true}
+			visible={visible}
+			onRequestClose={onClose}
+		>
+			<View style={styles.centeredView}>
+				<View style={[styles.modalView, { height: '60%' }]}>
+
+					{/* Name */}
+					<Text style={styles.headerText}>Cart</Text>
+					<view style={styles.itemDivider} />
+
+					{/* FlatList the items */}
+					<FlatList
+						data={cart}
+						keyExtractor={(_, i) => String(i)}
+						ItemSeparatorComponent={() => <View style={styles.itemDivider} />}
+
+						renderItem={({ item: entry }) => (
+							<View style={styles.cartRow}>
+								<Text style={styles.itemName}>{entry.item.name}</Text>
+								{entry.note ? <Text style={styles.itemNote}>{entry.note}</Text> : null}
+							</View>
+						)}
+					/>
+					
+					{/* button */}
+					<View style={{ width: '100%', alignItems: 'flex-end', marginTop: 12 }}>
+						<TouchableOpacity style={styles.modalButton} onPress={onClose}>
+							<Text style={styles.addButtonText}>Close</Text>
+						</TouchableOpacity>
+					</View>
+
+				</View>
+			</View>
+		</Modal>
+	);
+}
+
+
 
 // ----------------------- Page -----------------------
 
 function Index() {
 
-  // styling
-  const colorScheme = useColorScheme();
-  const C = colorScheme === 'dark' ? Colors.dark : Colors.light;
-  const styles = makeStyles(C);
+	// styling
+	const colorScheme = useColorScheme();
+	const C = colorScheme === 'dark' ? Colors.dark : Colors.light;
+	const styles = makeStyles(C);
+
+	// Popup
+	const [cart, setCart] = useState<CartEntry[]>([]);
+	const [cartVisible, setCartVisible] = useState(false);
+
+	const addToCart = (item: Item, note: string) => {
+		setCart((prev) => [...prev, { item, note }]);
+	};
+
+	// main
+	return (
+		<SafeAreaView style={{ flex: 1, backgroundColor: C.background }}>
+			<View style={styles.screen}>
+
+				{/* ── Header ── */}
+				<View style={styles.header}>
+					<Text style={styles.headerText}>Order</Text>
+				</View>
+
+				{/* ── Divider ── */}
+				<View style={styles.divider} />
 
 
-  // render
-  return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: C.background }}>
-    <View style={styles.screen}>
+				{/* ── Category List ── */}
+				{categories.map((category) => (
+					<CategoryList key={category.id} category={category} styles={styles} onAdd={addToCart} />
+				))}
 
-      {/* ── Header ── */}
-      <View style={styles.header}>
-        <View>
-          <Text style={styles.headerText}>Order</Text>
-        </View>
-      </View>
+				{/* ── Cart Modal ── */}
+				<CartModal visible={cartVisible} cart={cart} onClose={() => setCartVisible(false)} styles={styles} />
 
-      {/* ── Divider ── */}
-      <View style={styles.divider} />
+				{/* ── Floating Cart Button ── */}
+				<TouchableOpacity style={styles.cartButton} onPress={() => setCartVisible(true)}>
+					
+					{/* put icon in later */}
+					<Text style={styles.headerText}> ☰ </Text>
 
-    </View>
-    </SafeAreaView>
-  );
+				</TouchableOpacity>
+
+			</View>
+		</SafeAreaView>
+	);
 }
 
 export default Index;
@@ -39,36 +247,163 @@ export default Index;
 // ----------------------- StyleSheet -----------------------
 
 const makeStyles = (C: typeof Colors.light) => StyleSheet.create({
-  
-  screen: {
-    flex: 1,
-    backgroundColor: C.background,
-  },
 
-  // Header
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-end',
-    paddingHorizontal: 28,
-    paddingTop: 20,
-    paddingBottom: 16,
-  },
-  headerText: {
-    fontSize: 26,
-    fontWeight: '700',
-    color: C.text,
-    letterSpacing: -0.5,
-    fontFamily: 'Georgia',
-  },
+	screen: {
+		flex: 1,
+		backgroundColor: C.background,
+	},
 
-  // Divider
-  divider: {
-    height: 1,
-    backgroundColor: C.border,
-    marginHorizontal: 28,
-  },
-  
+	// Header
+	header: {
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		alignItems: 'flex-end',
+		paddingHorizontal: 28,
+		paddingTop: 20,
+		paddingBottom: 16,
+	},
+	headerText: {
+		fontSize: 26,
+		fontWeight: '700',
+		color: C.text,
+		letterSpacing: -0.5,
+		fontFamily: 'Georgia',
+	},
+
+	// Divider
+	divider: {
+		height: 1,
+		backgroundColor: C.border,
+		marginHorizontal: 28,
+		marginVertical: 8,
+	},
+
+	// List
+	listContent: {
+		paddingHorizontal: 28,
+		paddingTop: 8,
+		paddingBottom: 32,
+	},
+	itemDivider: {
+		height: 1,
+		backgroundColor: C.border,
+	},
+	itemRow: {
+		paddingVertical: 14,
+		gap: 6,
+	},
+	itemName: {
+		fontSize: 16,
+		fontWeight: '500',
+		color: C.text,
+		fontFamily: 'Georgia',
+	},
+
+	// allergy boxes
+	allergyRow: {
+		flexDirection: 'row',
+		flexWrap: 'wrap',
+		gap: 10,
+	},
+	allergyChip: {
+		paddingHorizontal: 10,
+		paddingVertical: 4,
+		backgroundColor: C.accentLight,
+		borderRadius: 5,
+		borderWidth: 1,
+		borderColor: C.border,
+	},
+	allergyText: {
+		fontSize: 10,
+		color: C.inkMuted,
+		fontWeight: '500',
+		textTransform: 'capitalize',
+		fontFamily: 'sans-serif',
+	},
+
+	// add button
+	addButton: {
+		position: 'absolute',
+		right: 0,
+		top: '50%',
+		transform: [{ translateY: -12 }],
+		width: 24,
+		height: 24,
+		borderRadius: 10,
+		backgroundColor: C.accent,
+	},
+	addButtonText: {
+		color: C.text,
+		fontSize: 16,
+		fontWeight: '700',
+		textAlign: 'center',
+		lineHeight: 24,
+	},
+
+	// Modal
+	centeredView: {
+		flex: 1,
+		justifyContent: 'center',
+		alignItems: 'center',
+	},
+	modalView: {
+		backgroundColor: C.surface,
+		margin: 10,
+		padding: 35,
+		width: '92%',
+		height: '30%',
+		shadowColor: '#000',
+		shadowOffset: { width: 0, height: 2 },
+		shadowOpacity: 0.25,
+		shadowRadius: 4,
+		elevation: 5,
+		borderWidth: 1,
+		borderRadius: 5,
+		borderColor: C.accent,
+	},
+	modalButton: {
+		borderRadius: 5,
+		borderWidth: 1,
+		borderColor: C.accent,
+		backgroundColor: C.accent,
+		padding: 10,
+	},
+	notesInput: {
+		marginVertical: 28,
+		borderWidth: 3,
+		borderRadius: 5,
+		borderColor: C.accent,
+		padding: 10,
+		color: C.text,
+		fontFamily: 'Georgia',
+		fontSize: 14,
+		minHeight: 60,
+		textAlignVertical: 'top',
+	},
+
+	// Floating cart button
+	cartButton: {
+		position: 'absolute',
+		bottom: 32,
+		right: 28,
+		width: 56,
+		height: 56,
+		borderRadius: 28,
+		backgroundColor: C.accent,
+		justifyContent: 'center',
+		alignItems: 'center',
+	},
+
+	// Cart 
+	cartRow: {
+		paddingVertical: 8,
+		gap: 2,
+	},
+	itemNote: {
+		fontSize: 12,
+		color: C.inkMuted,
+	},
+
 });
 
 // ----------------------- /// -----------------------
