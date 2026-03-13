@@ -24,29 +24,33 @@ qr_image = qr.resize(size)
 
 #   Draw print file   #
 label_images = []
+label_width = 300
+label_height = 150
 for i in range(b):
     print("Box", i+1, "of", b)
-    im = Image.new("L", (150, 300), color = "white")
+    im = Image.new("L", (label_height, label_width), color = "white")
     g = ImageDraw.Draw(im)
-    g.text((10,150), "Order Number: " + order + "\nDelivered by: " + d + "\nRecieved by: " + r + "\nNumber of boxes: " + str(b) + f"Box {i} of {b}", fill="black")
+    g.text((10,150), "Order Number: " + order + "\nDelivered by: " + d + "\nRecieved by: " + r + "\nNumber of boxes: \n" + str(b) + f"Box {i} of {b}", fill="black")
     
     #   Paste QR on file   #
     im.paste(qr_image)
+    #im = im.resize((label_width,im.height))
     label_images.append(im)
+
 
 #   Printer Code Below   #
 
 # Setting Printer Specificiations
 backend = 'pyusb'    # 'pyusb', 'linux_kernal', 'network'
 model = 'QL-500' 
-Vendor = "04F9"
+Vendor = "04f9"
 PID = "2015"
-printer = f'usb://0x04f9:0x2015'    
+printer = f'usb://0x{Vendor}:0x{PID}'    
 
 # im = Image.new("L", (696, 300), "white")
 qlr = BrotherQLRaster(model)
 qlr.exception_on_warning = True
-
+qlr.add_cut_every(1)
 # Converting print instructions for the Brother printer
 instructions = convert(
         qlr=qlr, 
@@ -61,4 +65,4 @@ instructions = convert(
         cut=True
 )
 
-send(instructions=instructions, printer_identifier=printer, backend_identifier=backend, blocking=True)
+send(instructions=instructions, printer_identifier=printer,backend_identifier=backend, blocking=True)
