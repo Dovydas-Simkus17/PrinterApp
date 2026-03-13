@@ -1,10 +1,36 @@
 import qrcode
+import usb.core
+import usb.util
+import sys
 from PIL import Image, ImageDraw
 from brother_ql.conversion import convert
 from brother_ql.backends.helpers import send
 from brother_ql.raster import BrotherQLRaster
 
 #   Record Variables   #
+
+# find the printers connected to the system
+class find_class(object):
+    def __init__(self, class_):
+        self._class = class_
+    def __call__(self, device):
+        # first, let's check the device
+        if device.bDeviceClass == self._class:
+            return True
+        # ok, transverse all devices to find an
+        # interface that matches our class
+        for cfg in device:
+            # find_descriptor: what's it?
+            intf = usb.util.find_descriptor(
+                                        cfg,
+                                        bInterfaceClass=self._class
+                                )
+            if intf is not None:
+                return True
+
+        return False
+
+printers = usb.core.find(find_all=1, custom_match=find_class(7))
 # variable for boxes with order request
 b = int(input("Please enter number of boxes: "))
 # alias of person to deliver order request
@@ -30,7 +56,7 @@ for i in range(b):
     print("Box", i+1, "of", b)
     im = Image.new("L", (label_height, label_width), color = "white")
     g = ImageDraw.Draw(im)
-    g.text((10,150), "Order Number: " + order + "\nDelivered by: " + d + "\nRecieved by: " + r + "\nNumber of boxes: \n" + str(b) + f"Box {i} of {b}", fill="black")
+    g.text((10,150), "Order Number: " + order + "\nDelivered by: " + d + "\nRecieved by: " + r + "\nNumber of boxes: \n" + f"Box {i+1} of {b}", fill="black")
     
     #   Paste QR on file   #
     im.paste(qr_image)
@@ -39,18 +65,35 @@ for i in range(b):
 
 
 #   Printer Code Below   #
-
+"""
+#Testing to find values
+for dev in printers:
+    print(dev)
+    #print(dev[7])
+    print(f"This is the idVendor: {hex(dev.idVendor)}")
+    print(f"This is the idProduct: {hex(dev.idProduct)}")
+    print(f"This is the iManufacturer: {usb.util.get_string(dev,dev.iManufacturer)}")
+    print(f"This is the iProduct: {usb.util.get_string(dev,dev.iProduct)}")
+"""
+# initalise the variables before going into loop
+idVendor = 0
+idProduct = 0
+iManufacturer = ""
+iProduct = ""
+for dev in printers:
+    idVendor = hex(dev.idVendor)
+    idProduct = hex(dev.idProduct)
+    iManufacturer = usb.util.get_string(dev,dev.iManufacturer)
+    iProduct = usb.util.get_string(dev,dev.iProduct)
 # Setting Printer Specificiations
 backend = 'pyusb'    # 'pyusb', 'linux_kernal', 'network'
-model = 'QL-500' 
-Vendor = "04f9"
-PID = "2015"
-printer = f'usb://0x{Vendor}:0x{PID}'    
+model = iProduct 
+printer = f'usb://{idVendor}:{idProduct}'    
 
 # im = Image.new("L", (696, 300), "white")
 qlr = BrotherQLRaster(model)
 qlr.exception_on_warning = True
-qlr.add_cut_every(1)
+
 # Converting print instructions for the Brother printer
 instructions = convert(
         qlr=qlr, 
