@@ -141,10 +141,11 @@ function CategoryList({ category, styles, onAdd }: { category: Category; styles:
 
 // ----------------------- Cart Modal -----------------------
 
-function CartModal({ visible, cart, onClose, styles }: {
+function CartModal({ visible, cart, onClose, onRemove, styles }: {
 	visible: boolean;
 	cart: CartEntry[];
 	onClose: () => void;
+	onRemove: (index: number) => void;
 	styles: ReturnType<typeof makeStyles>;
 }) {
 	return (
@@ -159,7 +160,7 @@ function CartModal({ visible, cart, onClose, styles }: {
 
 					{/* Name */}
 					<Text style={styles.headerText}>Cart</Text>
-					<view style={styles.itemDivider} />
+					<View style={styles.itemDivider} />
 
 					{/* FlatList the items */}
 					<FlatList
@@ -169,16 +170,26 @@ function CartModal({ visible, cart, onClose, styles }: {
 
 						renderItem={({ item: entry }) => (
 							<View style={styles.cartRow}>
-								<Text style={styles.itemName}>{entry.item.name}</Text>
+								<Text style={styles.itemName}>{entry.item.name}
+									{/* Minus Button - put in here so it alligns with the name */}
+									<TouchableOpacity style={styles.addButton} onPress={() => onRemove(cart.indexOf(entry))}>
+										<Text style={styles.addButtonText}> - </Text>
+									</TouchableOpacity>
+								</Text>
 								{entry.note ? <Text style={styles.itemNote}>{entry.note}</Text> : null}
 							</View>
 						)}
 					/>
 					
-					{/* button */}
+					{/* buttons */}
+					<View style={{ width: '100%', alignItems: 'flex-end', marginTop: 12 }}>
+						<TouchableOpacity style={[styles.modalButton, {alignItems: 'flex-start'}]} onPress={onClose}>
+							<Text style={styles.addButtonText}>Close</Text>
+						</TouchableOpacity>
+					</View>
 					<View style={{ width: '100%', alignItems: 'flex-end', marginTop: 12 }}>
 						<TouchableOpacity style={styles.modalButton} onPress={onClose}>
-							<Text style={styles.addButtonText}>Close</Text>
+							<Text style={styles.addButtonText}>Print</Text>
 						</TouchableOpacity>
 					</View>
 
@@ -206,6 +217,9 @@ function Index() {
 	const addToCart = (item: Item, note: string) => {
 		setCart((prev) => [...prev, { item, note }]);
 	};
+	const removeFromCart = (index: number) => {
+		setCart((prev) => prev.filter((_, i) => i !== index));
+	};
 
 	// main
 	return (
@@ -227,7 +241,7 @@ function Index() {
 				))}
 
 				{/* ── Cart Modal ── */}
-				<CartModal visible={cartVisible} cart={cart} onClose={() => setCartVisible(false)} styles={styles} />
+				<CartModal visible={cartVisible} cart={cart} onClose={() => setCartVisible(false)} onRemove={removeFromCart} styles={styles} />
 
 				{/* ── Floating Cart Button ── */}
 				<TouchableOpacity style={styles.cartButton} onPress={() => setCartVisible(true)}>
@@ -367,6 +381,10 @@ const makeStyles = (C: typeof Colors.light) => StyleSheet.create({
 		borderColor: C.accent,
 		backgroundColor: C.accent,
 		padding: 10,
+		alignItems: 'flex-end',
+		justifyContent: 'center',
+		flexDirection: 'row',
+		width: 80,
 	},
 	notesInput: {
 		marginVertical: 28,
