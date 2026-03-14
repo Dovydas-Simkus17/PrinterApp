@@ -7,8 +7,6 @@ from brother_ql.conversion import convert
 from brother_ql.backends.helpers import send
 from brother_ql.raster import BrotherQLRaster
 
-#   Record Variables   #
-
 # find the printers connected to the system
 class find_class(object):
     def __init__(self, class_):
@@ -33,33 +31,30 @@ class find_class(object):
 printers = usb.core.find(find_all=1, custom_match=find_class(7))
 # variable for boxes with order request
 b = int(input("Please enter number of boxes: "))
-# alias of person to deliver order request
-d = input("Please enter alias for deliverer: ")
-# alias of person to receive order request
-r = input("Please enter alias for recipient: ")
-
-#   Variables Output   #
-print("Delivered by:", d)
-print("Recieved by:", r)
-
+#   Record Variables   #
+"""
 #   Create QR Code   #
 order = input("Please enter order number: ")
 qr = qrcode.make(order)
 size = (145,145)
 qr_image = qr.resize(size)
-
+"""
+f = open("asda.txt")
+finalText = ""
+label_height = 0
+for x in f:
+    finalText += x+ "\n"
+    label_height+=15
 #   Draw print file   #
 label_images = []
 label_width = 300
-label_height = 150
 for i in range(b):
     print("Box", i+1, "of", b)
-    im = Image.new("L", (label_height, label_width), color = "white")
+    im = Image.new("L", (label_width, label_height), color = "white")
     g = ImageDraw.Draw(im)
-    g.text((10,150), "Order Number: " + order + "\nDelivered by: " + d + "\nRecieved by: " + r + "\nNumber of boxes: \n" + f"Box {i+1} of {b}", fill="black")
-    
+    g.multiline_text((0,0),finalText,spacing=1,fill='black')    
     #   Paste QR on file   #
-    im.paste(qr_image)
+    #im.paste(qr_image)
     #im = im.resize((label_width,im.height))
     label_images.append(im)
 
