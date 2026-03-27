@@ -24,13 +24,13 @@ export const mainsItems: Item[] = [
     { id: '1', name: 'Dovydas Special', allergens: ["dovydas", "unknown"] },
     { id: '2', name: 'Goop Sandwich', allergens: ['bogdan', 'dovydas', 'gluten', 'soy', 'dairy'] },
     { id: '3', name: 'Anaphylactic Shock', allergens: ['its just an epipen bro'] },
-    { id: '4', name: 'Kanes Rice', allergens: [] },
+    { id: '4', name: 'Kanes Rice', allergens: ['none'] },
     { id: '5', name: 'Nikkis Rice', allergens: ['kanes hair'] },
     { id: '6', name: '3 Shots of Vodka', allergens: ['dairy', 'Hangover'] },
     { id: '7', name: 'COFF', allergens: ['dovydas', 'bogdan', 'nikki', 'kane'] },
 ];
 export const drinksItems: Item[] = [
-    { id: '1', name: 'Tap Water', allergens: [] },
+    { id: '1', name: 'Tap Water', allergens: ['none'] },
     { id: '2', name: 'Nesquick Milkshake', allergens: ['dairy', 'gluten', 'egg'] },
     { id: '3', name: 'Iced Latte', allergens: ['dairy', 'gluten', 'egg', 'soy', 'dovydas', 'bogdan', 'ice'] },
 ];
@@ -87,101 +87,103 @@ function Menu() {
             <View style={styles.divider} />
 
             {/* ── Main area ── */}
-            <ScrollView style={{ marginHorizontal: 28, marginTop: 24 }}>
-                <View style={{ flexDirection: 'row', alignItems: 'center'}}>
-                    <Text style={{ color: C.text, fontSize: 16, fontFamily: 'Georgia'}}>Add Category + </Text>
-                    {/* Search Box */}
-                    <View style={styles.searchContainer}>
-                    <IconSymbol
-                        size={18}
-                        name="magnifyingglass"
-                        color={C.placeholder}
-                        style={styles.searchIcon}
-                    />
+            <ScrollView>
+                <View style={{ marginHorizontal: 28, marginTop: 24 }}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center'}}>
+                        <Text style={{ color: C.text, fontSize: 16, fontFamily: 'Georgia'}}>Add Category + </Text>
+                        {/* Search Box */}
+                        <View style={styles.searchContainer}>
+                        <IconSymbol
+                            size={18}
+                            name="magnifyingglass"
+                            color={C.placeholder}
+                            style={styles.searchIcon}
+                        />
 
-                    <TextInput
-                        style={styles.textBox}
-                        placeholder="Search..."
-                        placeholderTextColor={C.placeholder}
-                        selectionColor={C.accent}
-                        value={searchQuery}
-                        onChangeText={setSearchQuery}
-                    />
+                        <TextInput
+                            style={styles.textBox}
+                            placeholder="Search..."
+                            placeholderTextColor={C.placeholder}
+                            selectionColor={C.accent}
+                            value={searchQuery}
+                            onChangeText={setSearchQuery}
+                        />
+                        </View>
+                            
                     </View>
                         
-                </View>
-                    
-                    <View style={[styles.category, { marginTop: 16 }]}>
-                        <Pressable
-                            onPress={() => setStartersOpen(!startersOpen)}
-                            style={{ flexDirection: "row", alignItems: "center", justifyContent: "flex-start" }}
-                        >
-                            <Text style={[styles.subheaderText, { paddingVertical: 10 }]}>
-                                Starters
-                            </Text>
+                        <View style={[styles.category, { marginTop: 16 }]}>
+                            <Pressable
+                                onPress={() => setStartersOpen(!startersOpen)}
+                                style={{ flexDirection: "row", alignItems: "center", justifyContent: "flex-start" }}
+                            >
+                                <Text style={[styles.subheaderText, { paddingVertical: 10 }]}>
+                                    Starters
+                                </Text>
 
-                            <IconSymbol
-                                name={startersOpen ? "chevron.down" : "chevron.right"}
-                                size={18}
-                                color={C.text}
-                            />
-                        </Pressable>
-                        {startersOpen &&
-                            filteredStarters.map((item) => (
-                                <View key={item.id} style={styles.box}>
-                                <Text style={styles.categoryHeader}>{item.name}</Text>
-                                <Text style={styles.categoryBody}>{item.allergens.join(", ")}</Text>
-                                </View>
-                            ))
-                        }
-
-
-                        <Pressable
-                            onPress={() => setMainsOpen(!mainsOpen)}
-                            style={{ flexDirection: "row", alignItems: "center", justifyContent: "flex-start" }}
-                        >
-                            <Text style={[styles.subheaderText, { paddingVertical: 10 }]}>
-                                Mains
-                            </Text>
-
-                            <IconSymbol
-                                name={mainsOpen ? "chevron.down" : "chevron.right"}
-                                size={18}
-                                color={C.text}
-                            />
-                        </Pressable>
-                        {mainsOpen &&
-                            filteredMains.map((item) => (
-                                <View key={item.id} style={styles.box}>
+                                <IconSymbol
+                                    name={startersOpen ? "chevron.down" : "chevron.right"}
+                                    size={18}
+                                    color={C.text}
+                                />
+                            </Pressable>
+                            {startersOpen &&
+                                filteredStarters.map((item) => (
+                                    <View key={item.id} style={styles.box}>
                                     <Text style={styles.categoryHeader}>{item.name}</Text>
                                     <Text style={styles.categoryBody}>{item.allergens.join(", ")}</Text>
-                                </View>
-                            ))
-                        }
+                                    </View>
+                                ))
+                            }
 
 
-                        <Pressable
-                            onPress={() => setDrinksOpen(!drinksOpen)}
-                            style={{ flexDirection: "row", alignItems: "center", justifyContent: "flex-start" }}
-                        >
-                            <Text style={[styles.subheaderText, { paddingVertical: 10 }]}>
-                                Drinks
-                            </Text>
+                            <Pressable
+                                onPress={() => setMainsOpen(!mainsOpen)}
+                                style={{ flexDirection: "row", alignItems: "center", justifyContent: "flex-start" }}
+                            >
+                                <Text style={[styles.subheaderText, { paddingVertical: 10 }]}>
+                                    Mains
+                                </Text>
 
-                            <IconSymbol
-                                name={drinksOpen ? "chevron.down" : "chevron.right"}
-                                size={18}
-                                color={C.text}
-                            />
-                        </Pressable>
-                        {drinksOpen &&
-                            filteredDrinks.map((item) => (
-                                <View key={item.id} style={styles.box}>
-                                    <Text style={styles.categoryHeader}>{item.name}</Text>
-                                    <Text style={styles.categoryBody}>{item.allergens.join(", ")}</Text>
-                                </View>
-                            ))
-                        }
+                                <IconSymbol
+                                    name={mainsOpen ? "chevron.down" : "chevron.right"}
+                                    size={18}
+                                    color={C.text}
+                                />
+                            </Pressable>
+                            {mainsOpen &&
+                                filteredMains.map((item) => (
+                                    <View key={item.id} style={styles.box}>
+                                        <Text style={styles.categoryHeader}>{item.name}</Text>
+                                        <Text style={styles.categoryBody}>{item.allergens.join(", ")}</Text>
+                                    </View>
+                                ))
+                            }
+
+
+                            <Pressable
+                                onPress={() => setDrinksOpen(!drinksOpen)}
+                                style={{ flexDirection: "row", alignItems: "center", justifyContent: "flex-start" }}
+                            >
+                                <Text style={[styles.subheaderText, { paddingVertical: 10 }]}>
+                                    Drinks
+                                </Text>
+
+                                <IconSymbol
+                                    name={drinksOpen ? "chevron.down" : "chevron.right"}
+                                    size={18}
+                                    color={C.text}
+                                />
+                            </Pressable>
+                            {drinksOpen &&
+                                filteredDrinks.map((item) => (
+                                    <View key={item.id} style={styles.box}>
+                                        <Text style={styles.categoryHeader}>{item.name}</Text>
+                                        <Text style={styles.categoryBody}>{item.allergens.join(", ")}</Text>
+                                    </View>
+                                ))
+                            }
+                        </View>
                     </View>
             </ScrollView>
         </View>

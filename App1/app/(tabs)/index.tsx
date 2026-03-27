@@ -183,11 +183,11 @@ function CartModal({ visible, cart, onClose, onRemove, onPrint, orderNo, setOrde
 						keyExtractor={(_, i) => String(i)}
 						ItemSeparatorComponent={() => <View style={styles.itemDivider} />}
 
-						renderItem={({ item: entry }) => (
+						renderItem={({ item: entry, index }) => (
 							<View style={styles.cartRow}>
 								<Text style={styles.itemName}>{entry.item.name}
 									{/* Minus Button - put in here so it alligns with the name */}
-									<TouchableOpacity style={styles.addButton} onPress={() => onRemove(cart.indexOf(entry))}>
+									<TouchableOpacity style={styles.addButton} onPress={() => onRemove(index)}>
 										<Text style={styles.addButtonText}> - </Text>
 									</TouchableOpacity>
 								</Text>
@@ -283,12 +283,12 @@ function Index() {
 				<View style={styles.divider} />
 
 				<ScrollView>
-
 					{/* ── Category List ── */}
 					{categories.map((category) => (
 						<CategoryList key={category.id} category={category} styles={styles} onAdd={addToCart} />
 					))}
-
+				</ScrollView>
+				<View>
 					{/* ── Cart Modal ── */}
 					<CartModal 
 						visible={cartVisible} 
@@ -307,7 +307,7 @@ function Index() {
 						<Text style={styles.headerText}> ☰ </Text>
 
 					</TouchableOpacity>
-				</ScrollView>
+				</View>
 
 			</View>
 		</SafeAreaView>
