@@ -96,8 +96,15 @@ function ItemRow({ item, styles, onAdd }: { item: Item; styles: ReturnType<typeo
 			</Modal>
 
 
-			{/* Name */}
-			<Text style={styles.itemName}>{item.name}</Text>
+			
+			{/* Add Button */}
+			<View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+				{/* Name */}
+				<Text style={styles.itemName}>{item.name}</Text>
+				<TouchableOpacity style={styles.addButton} onPress={() => setModalVisible(true)}>
+					<Text style={styles.addButtonText}>+</Text>
+				</TouchableOpacity>
+			</View>
 			{/* Allergens Loop */}
 			{item.allergens.length > 0 && (
 				<View style={styles.allergyRow}>
@@ -108,10 +115,7 @@ function ItemRow({ item, styles, onAdd }: { item: Item; styles: ReturnType<typeo
 					))}
 				</View>
 			)}
-			{/* Add Button */}
-			<TouchableOpacity style={styles.addButton} onPress={() => setModalVisible(true)}>
-				<Text style={styles.addButtonText}> + </Text>
-			</TouchableOpacity>
+			
 		</View>
 	);
 }
@@ -184,13 +188,13 @@ function CartModal({ visible, cart, onClose, onRemove, onPrint, orderNo, setOrde
 						ItemSeparatorComponent={() => <View style={styles.itemDivider} />}
 
 						renderItem={({ item: entry, index }) => (
-							<View style={styles.cartRow}>
-								<Text style={styles.itemName}>{entry.item.name}
-									{/* Minus Button - put in here so it alligns with the name */}
+							<View>
+								<View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+									<Text style={styles.itemName}>{entry.item.name}</Text>
 									<TouchableOpacity style={styles.addButton} onPress={() => onRemove(index)}>
-										<Text style={styles.addButtonText}> - </Text>
+										<Text style={styles.addButtonText}>-</Text>
 									</TouchableOpacity>
-								</Text>
+								</View>
 								{entry.note ? <Text style={styles.itemNote}>{entry.note}</Text> : null}
 							</View>
 						)}
@@ -396,22 +400,19 @@ const makeStyles = (C: typeof Colors.light) => StyleSheet.create({
 
 	// add button
 	addButton: {
-		position: 'absolute',
-		right: 0,
-		top: '50%',
-		transform: [{ translateY: -12 }],
 		width: 24,
 		height: 24,
 		borderRadius: 10,
 		backgroundColor: C.placeholder,
-	},
+		justifyContent: 'center',
+		alignItems: 'center',
+	},	
 	addButtonText: {
 		color: C.text,
 		fontSize: 16,
 		fontWeight: '700',
 		fontFamily: 'Georgia',
 		textAlign: 'center',
-		lineHeight: 24,
 	},
 
 	// Modal
@@ -474,10 +475,6 @@ const makeStyles = (C: typeof Colors.light) => StyleSheet.create({
 	},
 
 	// Cart 
-	cartRow: {
-		paddingVertical: 8,
-		gap: 2,
-	},
 	itemNote: {
 		fontSize: 12,
 		color: C.inkMuted,
