@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Modal, TextInput, Platform} from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Modal, TextInput, Platform, ScrollView} from 'react-native';
 import { SafeAreaView } from "react-native-safe-area-context";
 import React, {useState} from 'react';
 import { Colors } from '@/app/theme';
@@ -282,30 +282,32 @@ function Index() {
 				{/* ── Divider ── */}
 				<View style={styles.divider} />
 
+				<ScrollView>
 
-				{/* ── Category List ── */}
-				{categories.map((category) => (
-					<CategoryList key={category.id} category={category} styles={styles} onAdd={addToCart} />
-				))}
+					{/* ── Category List ── */}
+					{categories.map((category) => (
+						<CategoryList key={category.id} category={category} styles={styles} onAdd={addToCart} />
+					))}
 
-				{/* ── Cart Modal ── */}
-				<CartModal 
-					visible={cartVisible} 
-					cart={cart} onClose={() => setCartVisible(false)} 
-					onRemove={removeFromCart} 
-					onPrint={printCart} 
-					orderNo={orderNo} 
-					setOrderNo={setOrderNo} 
-					styles={styles} 
-				/>
+					{/* ── Cart Modal ── */}
+					<CartModal 
+						visible={cartVisible} 
+						cart={cart} onClose={() => setCartVisible(false)} 
+						onRemove={removeFromCart} 
+						onPrint={printCart} 
+						orderNo={orderNo} 
+						setOrderNo={setOrderNo} 
+						styles={styles} 
+					/>
 
-				{/* ── Floating Cart Button ── */}
-				<TouchableOpacity style={styles.cartButton} onPress={() => setCartVisible(true)}>
-					
-					{/* put icon in later */}
-					<Text style={styles.headerText}> ☰ </Text>
+					{/* ── Floating Cart Button ── */}
+					<TouchableOpacity style={styles.cartButton} onPress={() => setCartVisible(true)}>
+						
+						{/* put icon in later */}
+						<Text style={styles.headerText}> ☰ </Text>
 
-				</TouchableOpacity>
+					</TouchableOpacity>
+				</ScrollView>
 
 			</View>
 		</SafeAreaView>

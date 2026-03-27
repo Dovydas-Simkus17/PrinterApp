@@ -1,4 +1,4 @@
-import { Keyboard, TouchableWithoutFeedback, View, Text, TextInput, StyleSheet, Pressable} from 'react-native'
+import { Keyboard, TouchableWithoutFeedback, View, Text, TextInput, StyleSheet, Pressable, ScrollView} from 'react-native'
 import { SafeAreaView } from "react-native-safe-area-context";
 import { IconSymbol } from '@/components/ui/icon-symbol';
 import React, { useState } from 'react';
@@ -87,107 +87,106 @@ function Menu() {
             <View style={styles.divider} />
 
             {/* ── Main area ── */}
-                <View style={{ marginHorizontal: 28, marginTop: 24 }}>
-                    <View style={{ flexDirection: 'row', alignItems: 'center'}}>
-                        <Text style={{ color: C.text, fontSize: 16, fontFamily: 'Georgia'}}>Add Category + </Text>
-                        {/* Search Box */}
-                        <View style={styles.searchContainer}>
-                        <IconSymbol
-                            size={18}
-                            name="magnifyingglass"
-                            color={C.placeholder}
-                            style={styles.searchIcon}
-                        />
+            <ScrollView style={{ marginHorizontal: 28, marginTop: 24 }}>
+                <View style={{ flexDirection: 'row', alignItems: 'center'}}>
+                    <Text style={{ color: C.text, fontSize: 16, fontFamily: 'Georgia'}}>Add Category + </Text>
+                    {/* Search Box */}
+                    <View style={styles.searchContainer}>
+                    <IconSymbol
+                        size={18}
+                        name="magnifyingglass"
+                        color={C.placeholder}
+                        style={styles.searchIcon}
+                    />
 
-                        <TextInput
-                            style={styles.textBox}
-                            placeholder="Search..."
-                            placeholderTextColor={C.placeholder}
-                            selectionColor={C.accent}
-                            value={searchQuery}
-                            onChangeText={setSearchQuery}
-                        />
-                        </View>
-                            
+                    <TextInput
+                        style={styles.textBox}
+                        placeholder="Search..."
+                        placeholderTextColor={C.placeholder}
+                        selectionColor={C.accent}
+                        value={searchQuery}
+                        onChangeText={setSearchQuery}
+                    />
                     </View>
                         
-                        <View style={[styles.category, { marginTop: 16 }]}>
-                            <Pressable
-                                onPress={() => setStartersOpen(!startersOpen)}
-                                style={{ flexDirection: "row", alignItems: "center", justifyContent: "flex-start" }}
-                            >
-                                <Text style={[styles.subheaderText, { paddingVertical: 10 }]}>
-                                    Starters
-                                </Text>
+                </View>
+                    
+                    <View style={[styles.category, { marginTop: 16 }]}>
+                        <Pressable
+                            onPress={() => setStartersOpen(!startersOpen)}
+                            style={{ flexDirection: "row", alignItems: "center", justifyContent: "flex-start" }}
+                        >
+                            <Text style={[styles.subheaderText, { paddingVertical: 10 }]}>
+                                Starters
+                            </Text>
 
-                                <IconSymbol
-                                    name={startersOpen ? "chevron.down" : "chevron.right"}
-                                    size={18}
-                                    color={C.text}
-                                />
-                            </Pressable>
-                            {startersOpen &&
-                                filteredStarters.map((item) => (
-                                    <View key={item.id} style={styles.box}>
+                            <IconSymbol
+                                name={startersOpen ? "chevron.down" : "chevron.right"}
+                                size={18}
+                                color={C.text}
+                            />
+                        </Pressable>
+                        {startersOpen &&
+                            filteredStarters.map((item) => (
+                                <View key={item.id} style={styles.box}>
+                                <Text style={styles.categoryHeader}>{item.name}</Text>
+                                <Text style={styles.categoryBody}>{item.allergens.join(", ")}</Text>
+                                </View>
+                            ))
+                        }
+
+
+                        <Pressable
+                            onPress={() => setMainsOpen(!mainsOpen)}
+                            style={{ flexDirection: "row", alignItems: "center", justifyContent: "flex-start" }}
+                        >
+                            <Text style={[styles.subheaderText, { paddingVertical: 10 }]}>
+                                Mains
+                            </Text>
+
+                            <IconSymbol
+                                name={mainsOpen ? "chevron.down" : "chevron.right"}
+                                size={18}
+                                color={C.text}
+                            />
+                        </Pressable>
+                        {mainsOpen &&
+                            filteredMains.map((item) => (
+                                <View key={item.id} style={styles.box}>
                                     <Text style={styles.categoryHeader}>{item.name}</Text>
                                     <Text style={styles.categoryBody}>{item.allergens.join(", ")}</Text>
-                                    </View>
-                                ))
-                            }
+                                </View>
+                            ))
+                        }
 
 
-                            <Pressable
-                                onPress={() => setMainsOpen(!mainsOpen)}
-                                style={{ flexDirection: "row", alignItems: "center", justifyContent: "flex-start" }}
-                            >
-                                <Text style={[styles.subheaderText, { paddingVertical: 10 }]}>
-                                    Mains
-                                </Text>
+                        <Pressable
+                            onPress={() => setDrinksOpen(!drinksOpen)}
+                            style={{ flexDirection: "row", alignItems: "center", justifyContent: "flex-start" }}
+                        >
+                            <Text style={[styles.subheaderText, { paddingVertical: 10 }]}>
+                                Drinks
+                            </Text>
 
-                                <IconSymbol
-                                    name={mainsOpen ? "chevron.down" : "chevron.right"}
-                                    size={18}
-                                    color={C.text}
-                                />
-                            </Pressable>
-                            {mainsOpen &&
-                                filteredMains.map((item) => (
-                                    <View key={item.id} style={styles.box}>
-                                        <Text style={styles.categoryHeader}>{item.name}</Text>
-                                        <Text style={styles.categoryBody}>{item.allergens.join(", ")}</Text>
-                                    </View>
-                                ))
-                            }
-
-
-                            <Pressable
-                                onPress={() => setDrinksOpen(!drinksOpen)}
-                                style={{ flexDirection: "row", alignItems: "center", justifyContent: "flex-start" }}
-                            >
-                                <Text style={[styles.subheaderText, { paddingVertical: 10 }]}>
-                                    Drinks
-                                </Text>
-
-                                <IconSymbol
-                                    name={drinksOpen ? "chevron.down" : "chevron.right"}
-                                    size={18}
-                                    color={C.text}
-                                />
-                            </Pressable>
-                            {drinksOpen &&
-                                filteredDrinks.map((item) => (
-                                    <View key={item.id} style={styles.box}>
-                                        <Text style={styles.categoryHeader}>{item.name}</Text>
-                                        <Text style={styles.categoryBody}>{item.allergens.join(", ")}</Text>
-                                    </View>
-                                ))
-                            }
-                        </View>
-                </View>
-
+                            <IconSymbol
+                                name={drinksOpen ? "chevron.down" : "chevron.right"}
+                                size={18}
+                                color={C.text}
+                            />
+                        </Pressable>
+                        {drinksOpen &&
+                            filteredDrinks.map((item) => (
+                                <View key={item.id} style={styles.box}>
+                                    <Text style={styles.categoryHeader}>{item.name}</Text>
+                                    <Text style={styles.categoryBody}>{item.allergens.join(", ")}</Text>
+                                </View>
+                            ))
+                        }
+                    </View>
+            </ScrollView>
         </View>
     </SafeAreaView>
-  );
+  );    
 }
 
 export default Menu;
