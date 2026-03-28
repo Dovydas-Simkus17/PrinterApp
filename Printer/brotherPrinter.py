@@ -30,7 +30,7 @@ class find_class(object):
 
 printers = usb.core.find(find_all=1, custom_match=find_class(7))
 # variable for boxes with order request
-b = int(input("Please enter number of boxes: "))
+#b = int(input("Please enter number of boxes: "))
 #   Record Variables   #
 """
 #   Create QR Code   #
@@ -39,7 +39,8 @@ qr = qrcode.make(order)
 size = (145,145)
 qr_image = qr.resize(size)
 """
-f = open("asda.txt")
+
+f = open("./Printer/asda.txt")
 finalText = ""
 label_height = 0
 for x in f:
@@ -47,10 +48,10 @@ for x in f:
     label_height+=15
 #   Draw print file   #
 label_images = []
-label_width = 300
-for i in range(b):
-    print("Box", i+1, "of", b)
-    im = Image.new("L", (label_width, label_height), color = "white")
+label_width = 150
+for i in range(1):
+    #print("Box", i+1, "of", b)
+    im = Image.new("L", (label_height, label_width), color = "white")
     g = ImageDraw.Draw(im)
     g.multiline_text((0,0),finalText,spacing=1,fill='black')    
     #   Paste QR on file   #
@@ -70,6 +71,16 @@ for dev in printers:
     print(f"This is the iManufacturer: {usb.util.get_string(dev,dev.iManufacturer)}")
     print(f"This is the iProduct: {usb.util.get_string(dev,dev.iProduct)}")
 """
+"""
+# 1. Open the image
+img = Image.open("./Printer/apple.png")
+image_height = 200
+image_width = 300
+im = Image.new("L", (image_height, image_width), color = "white")
+g = ImageDraw.Draw(im)
+g.bitmap((0,0),img,fill='black')
+label_images = im.resize((image_width,im.height))
+"""
 # initalise the variables before going into loop
 idVendor = 0
 idProduct = 0
@@ -88,13 +99,13 @@ printer = f'usb://{idVendor}:{idProduct}'
 # im = Image.new("L", (696, 300), "white")
 qlr = BrotherQLRaster(model)
 qlr.exception_on_warning = True
-
+qlr.cut_at_end = True
 # Converting print instructions for the Brother printer
 instructions = convert(
         qlr=qlr, 
         images=label_images,    #  Takes a list of file names or PIL objects.
         label='62', 
-        rotate='90',    # 'Auto', '0', '90', '270'
+        rotate='0',    # 'Auto', '0', '90', '270'
         threshold=70.0,    # Black and white threshold in percent.
         dither=False, 
         compress=False, 
