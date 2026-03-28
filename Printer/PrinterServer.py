@@ -41,28 +41,27 @@ class find_class(object):
 
         return False
 
-printers = usb.core.find(find_all=1, custom_match=find_class(7))
-
 def BrotherPrint(value):
-    
-    finalText = value
+    printers = usb.core.find(find_all=1, custom_match=find_class(7))
+    finalText = ""
+    f = value
     label_height = 15
-    #for x in f:
-    #    finalText += x + "\n"
-    #    label_height+=15
+    for x in f.split("\n"):
+       finalText += x + "\n"
+       label_height+=15
     label_images = []
     label_width = 150
-    for i in range(b):
-        print("Box", i+1, "of", b)
-        im = Image.new("L", (label_width, label_height), color = "white")
-        g = ImageDraw.Draw(im)
-        g.multiline_text((0,0),finalText,spacing=1, fill="black")
+    # for i in range(b):
+        # print("Box", i+1, "of", b)
+    im = Image.new("L", (label_width, label_height), color = "white")
+    g = ImageDraw.Draw(im)
+    g.multiline_text((0,0),finalText,spacing=1, fill="black")
 
         
         #   Paste QR on file   #
         #im.paste(qr_image)
         #im = im.resize((label_width,im.height))
-        label_images.append(im)
+    label_images.append(im)
     # initalise the variables before going into loop
     idVendor = 0
     idProduct = 0
