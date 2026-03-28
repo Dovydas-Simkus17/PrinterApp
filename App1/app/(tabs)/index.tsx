@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Modal, TextInput, Platform} from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Modal, TextInput, Platform, ScrollView} from 'react-native';
 import { SafeAreaView } from "react-native-safe-area-context";
 import React, {useState} from 'react';
 import { Colors } from '@/app/theme';
@@ -96,8 +96,15 @@ function ItemRow({ item, styles, onAdd }: { item: Item; styles: ReturnType<typeo
 			</Modal>
 
 
-			{/* Name */}
-			<Text style={styles.itemName}>{item.name}</Text>
+			
+			{/* Add Button */}
+			<View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+				{/* Name */}
+				<Text style={styles.itemName}>{item.name}</Text>
+				<TouchableOpacity style={styles.addButton} onPress={() => setModalVisible(true)}>
+					<Text style={styles.addButtonText}>+</Text>
+				</TouchableOpacity>
+			</View>
 			{/* Allergens Loop */}
 			{item.allergens.length > 0 && (
 				<View style={styles.allergyRow}>
@@ -108,10 +115,7 @@ function ItemRow({ item, styles, onAdd }: { item: Item; styles: ReturnType<typeo
 					))}
 				</View>
 			)}
-			{/* Add Button */}
-			<TouchableOpacity style={styles.addButton} onPress={() => setModalVisible(true)}>
-				<Text style={styles.addButtonText}> + </Text>
-			</TouchableOpacity>
+			
 		</View>
 	);
 }
@@ -183,14 +187,14 @@ function CartModal({ visible, cart, onClose, onRemove, onPrint, orderNo, setOrde
 						keyExtractor={(_, i) => String(i)}
 						ItemSeparatorComponent={() => <View style={styles.itemDivider} />}
 
-						renderItem={({ item: entry }) => (
-							<View style={styles.cartRow}>
-								<Text style={styles.itemName}>{entry.item.name}
-									{/* Minus Button - put in here so it alligns with the name */}
-									<TouchableOpacity style={styles.addButton} onPress={() => onRemove(cart.indexOf(entry))}>
-										<Text style={styles.addButtonText}> - </Text>
+						renderItem={({ item: entry, index }) => (
+							<View>
+								<View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+									<Text style={styles.itemName}>{entry.item.name}</Text>
+									<TouchableOpacity style={styles.addButton} onPress={() => onRemove(index)}>
+										<Text style={styles.addButtonText}>-</Text>
 									</TouchableOpacity>
-								</Text>
+								</View>
 								{entry.note ? <Text style={styles.itemNote}>{entry.note}</Text> : null}
 							</View>
 						)}
@@ -282,30 +286,32 @@ function Index() {
 				{/* ── Divider ── */}
 				<View style={styles.divider} />
 
+				<ScrollView>
+					{/* ── Category List ── */}
+					{categories.map((category) => (
+						<CategoryList key={category.id} category={category} styles={styles} onAdd={addToCart} />
+					))}
+				</ScrollView>
+				<View>
+					{/* ── Cart Modal ── */}
+					<CartModal 
+						visible={cartVisible} 
+						cart={cart} onClose={() => setCartVisible(false)} 
+						onRemove={removeFromCart} 
+						onPrint={printCart} 
+						orderNo={orderNo} 
+						setOrderNo={setOrderNo} 
+						styles={styles} 
+					/>
 
-				{/* ── Category List ── */}
-				{categories.map((category) => (
-					<CategoryList key={category.id} category={category} styles={styles} onAdd={addToCart} />
-				))}
+					{/* ── Floating Cart Button ── */}
+					<TouchableOpacity style={styles.cartButton} onPress={() => setCartVisible(true)}>
+						
+						{/* put icon in later */}
+						<Text style={styles.headerText}> ☰ </Text>
 
-				{/* ── Cart Modal ── */}
-				<CartModal 
-					visible={cartVisible} 
-					cart={cart} onClose={() => setCartVisible(false)} 
-					onRemove={removeFromCart} 
-					onPrint={printCart} 
-					orderNo={orderNo} 
-					setOrderNo={setOrderNo} 
-					styles={styles} 
-				/>
-
-				{/* ── Floating Cart Button ── */}
-				<TouchableOpacity style={styles.cartButton} onPress={() => setCartVisible(true)}>
-					
-					{/* put icon in later */}
-					<Text style={styles.headerText}> ☰ </Text>
-
-				</TouchableOpacity>
+					</TouchableOpacity>
+				</View>
 
 			</View>
 		</SafeAreaView>
@@ -394,22 +400,19 @@ const makeStyles = (C: typeof Colors.light) => StyleSheet.create({
 
 	// add button
 	addButton: {
-		position: 'absolute',
-		right: 0,
-		top: '50%',
-		transform: [{ translateY: -12 }],
 		width: 24,
 		height: 24,
 		borderRadius: 10,
 		backgroundColor: C.placeholder,
-	},
+		justifyContent: 'center',
+		alignItems: 'center',
+	},	
 	addButtonText: {
 		color: C.text,
 		fontSize: 16,
 		fontWeight: '700',
 		fontFamily: 'Georgia',
 		textAlign: 'center',
-		lineHeight: 24,
 	},
 
 	// Modal
@@ -422,8 +425,8 @@ const makeStyles = (C: typeof Colors.light) => StyleSheet.create({
 		backgroundColor: C.surface,
 		margin: 10,
 		padding: 35,
-		width: '92%',
-		height: '30%',
+		width: 350,
+		height: 320,
 		shadowColor: '#000',
 		shadowOffset: { width: 0, height: 2 },
 		shadowOpacity: 0.25,
@@ -472,10 +475,6 @@ const makeStyles = (C: typeof Colors.light) => StyleSheet.create({
 	},
 
 	// Cart 
-	cartRow: {
-		paddingVertical: 8,
-		gap: 2,
-	},
 	itemNote: {
 		fontSize: 12,
 		color: C.inkMuted,
