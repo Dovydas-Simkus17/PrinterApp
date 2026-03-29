@@ -12,7 +12,7 @@ import { NativeEventEmitter, NativeModules } from 'react-native';
 const { scan, sendCommand } = useBLE();
 
 // ----------------------- Data -----------------------
-
+scan();
 type Item = {
     id: string;
     name: string;
@@ -246,7 +246,6 @@ function Index() {
 	};
 	const printCart = async () => {
 		if (cart.length === 0) return;
-
 		try {
 			const lines = cart.map((entry, i) => {
 				const note = entry.note ? `\n   Note: ${entry.note}` : '';
@@ -265,11 +264,7 @@ function Index() {
 				a.click();
 				URL.revokeObjectURL(url);
 			} else {
-				const path = `${FileSystem.cacheDirectory}order.txt`;
-				await FileSystem.writeAsStringAsync(path, content, {
-					encoding: FileSystem.EncodingType.UTF8,
-				});
-				await Sharing.shareAsync(path);
+				sendCommand(content);
 			}
 		} catch (e) {
 			console.error('Failed to save order:', e);

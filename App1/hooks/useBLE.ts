@@ -7,8 +7,8 @@ import { useState } from "react";
 import { BleManager, Device } from "react-native-ble-plx";
 import { Buffer } from "buffer";
 
-const SERVICE_UUID = "12345678-1234-1234-1234-123456789abc";
-const CHAR_UUID = "abcd1234-5678-1234-5678-123456789abc";
+const SERVICE_UUID = "0000feed-0000-1000-8000-00805f9b34fb";
+const CHAR_UUID = "0000beef-0000-1000-8000-00805f9b34fb";
 
 const manager = new BleManager();
 
@@ -45,7 +45,7 @@ export function useBLE() {
   };
 
   // ✍️ Send command (THIS is your main function)
-  const sendCommand = async (data: object) => {
+  const sendCommand = async (data: String) => {
     if (!device) {
       console.log("No device connected");
       return;
