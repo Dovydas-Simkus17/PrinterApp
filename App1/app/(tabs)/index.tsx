@@ -3,9 +3,13 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import React, {useState} from 'react';
 import { Colors } from '@/app/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
+import { useBLE }from '@/hooks/useBLE'
 import { categories } from './menu';
 import * as FileSystem from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
+import { NativeEventEmitter, NativeModules } from 'react-native';
+
+const { scan, sendCommand } = useBLE();
 
 // ----------------------- Data -----------------------
 

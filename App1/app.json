@@ -38,7 +38,9 @@
             "backgroundColor": "#000000"
           }
         }
-      ]
+      ],
+      "react-native-ble-manager",
+      "react-native-ble-plx"
     ],
     "experiments": {
       "typedRoutes": true,
