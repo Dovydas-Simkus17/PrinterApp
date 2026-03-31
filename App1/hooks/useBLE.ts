@@ -15,17 +15,21 @@ const manager = new BleManager();
 export function useBLE() {
   const [device, setDevice] = useState<Device | null>(null);
 
-  // 🔍 Scan for your Pi
+  // Scan for the Pi
   const scan = () => {
     manager.startDeviceScan(null, null, (error, dev) => {
+      console.log("scanning");
       if (error) {
         console.log(error);
+        console.log("failed");
         return;
       }
 
-      if (dev?.name === "PiPrinter") {
+      if (dev?.name?.includes("PiPrinter")||
+        dev?.localName?.includes("PiPrinter")) {
         console.log("Found Pi:", dev.name);
         manager.stopDeviceScan();
+        console.log("found");
         connect(dev);
       }
     });
@@ -34,12 +38,15 @@ export function useBLE() {
   // 🔗 Connect
   const connect = async (dev: Device) => {
     try {
+      console.log("connecting");
       const connected = await dev.connect();
       await connected.discoverAllServicesAndCharacteristics();
 
       console.log("Connected!");
+      console.log("connected");
       setDevice(connected);
     } catch (e) {
+      console.log("failed");
       console.error("Connection error:", e);
     }
   };
@@ -56,7 +63,7 @@ export function useBLE() {
       // BLE PLX requires Base64
       const base64 = Buffer.from(data, "utf-8").toString("base64");
 
-      await device.writeCharacteristicWithResponseForService(
+      await device.writeCharacteristicWithoutResponseForService(
         SERVICE_UUID,
         CHAR_UUID,
         base64

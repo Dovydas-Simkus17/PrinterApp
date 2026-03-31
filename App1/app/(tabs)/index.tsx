@@ -1,14 +1,14 @@
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, Modal, TextInput, Platform, ScrollView} from 'react-native';
 import { SafeAreaView } from "react-native-safe-area-context";
 import React, {useEffect, useState} from 'react';
-import { Colors } from '@/app/theme';
+import { Colors } from '@/hooks/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { useBLE }from '@/hooks/useBLE'
 import { categories } from './menu';
 import * as FileSystem from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
 import { PermissionsAndroid, NativeEventEmitter, NativeModules } from 'react-native';
-const { scan, sendCommand } = useBLE();
+
 async function requestPermissions(){
 	await PermissionsAndroid.requestMultiple([
     PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN,
@@ -17,12 +17,7 @@ async function requestPermissions(){
   ]);
 }
 // ----------------------- Data -----------------------
-useEffect(() => {
-  requestPermissions().then(() => {
-    // THEN init BLE
-    scan();
-  });
-}, []);
+
 type Item = {
     id: string;
     name: string;
@@ -237,7 +232,13 @@ function CartModal({ visible, cart, onClose, onRemove, onPrint, orderNo, setOrde
 // ----------------------- Page -----------------------
 
 function Index() {
-
+	const {scan, sendCommand } = useBLE();
+	useEffect(() => {
+	requestPermissions().then(() => {
+		// THEN init BLE
+		scan();
+	});
+	}, []);
 	// styling
 	const colorScheme = useColorScheme();
 	const C = colorScheme === 'dark' ? Colors.dark : Colors.light;

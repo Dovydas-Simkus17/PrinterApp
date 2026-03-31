@@ -2,7 +2,7 @@ import { Keyboard, TouchableWithoutFeedback, View, Text, TextInput, StyleSheet, 
 import { SafeAreaView } from "react-native-safe-area-context";
 import { IconSymbol } from '@/components/ui/icon-symbol';
 import React, { useState } from 'react';
-import { Colors } from '@/app/theme';
+import { Colors } from '@/hooks/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 
 // ----------------------- Page -----------------------
