@@ -52,10 +52,9 @@ export function useBLE() {
     }
 
     try {
-      const json = JSON.stringify(data);
 
       // BLE PLX requires Base64
-      const base64 = Buffer.from(json, "utf-8").toString("base64");
+      const base64 = Buffer.from(data, "utf-8").toString("base64");
 
       await device.writeCharacteristicWithResponseForService(
         SERVICE_UUID,
@@ -63,7 +62,7 @@ export function useBLE() {
         base64
       );
 
-      console.log("Sent:", json);
+      console.log("Sent:", data);
     } catch (e) {
       console.error("Write failed:", e);
     }
