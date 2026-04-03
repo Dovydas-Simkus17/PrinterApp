@@ -7,6 +7,7 @@ import { useState } from "react";
 import { BleManager, Device } from "react-native-ble-plx";
 import { Buffer } from "buffer";
 
+//These will be found on the server code
 const SERVICE_UUID = "0000feed-0000-1000-8000-00805f9b34fb";
 const CHAR_UUID = "0000beef-0000-1000-8000-00805f9b34fb";
 
@@ -19,12 +20,14 @@ export function useBLE() {
   const scan = () => {
     manager.startDeviceScan(null, null, (error, dev) => {
       console.log("scanning");
+      //Error will happen with denied permissions
       if (error) {
         console.log(error);
         console.log("failed");
         return;
       }
 
+      //Find server based on server name
       if (dev?.name?.includes("PiPrinter")||
         dev?.localName?.includes("PiPrinter")) {
         console.log("Found Pi:", dev.name);
@@ -35,7 +38,7 @@ export function useBLE() {
     });
   };
 
-  // 🔗 Connect
+  //Connect
   const connect = async (dev: Device) => {
     try {
       console.log("connecting");
@@ -51,7 +54,7 @@ export function useBLE() {
     }
   };
 
-  // ✍️ Send command (THIS is your main function)
+  //Send command
   const sendCommand = async (data: String) => {
     if (!device) {
       console.log("No device connected");
@@ -60,9 +63,10 @@ export function useBLE() {
 
     try {
 
-      // BLE PLX requires Base64
+      //The bluetooth module requires Base64
       const base64 = Buffer.from(data, "utf-8").toString("base64");
 
+      //Send to server, don't care for response
       await device.writeCharacteristicWithoutResponseForService(
         SERVICE_UUID,
         CHAR_UUID,
