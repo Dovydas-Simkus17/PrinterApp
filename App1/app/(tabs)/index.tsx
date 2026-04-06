@@ -235,7 +235,7 @@ function Index() {
 	const {scan, sendCommand } = useBLE();
 	useEffect(() => {
 	requestPermissions().then(() => {
-		// THEN init BLE
+		//init BLE after
 		scan();
 	});
 	}, []);

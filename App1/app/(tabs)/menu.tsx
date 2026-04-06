@@ -14,20 +14,39 @@ type Item = {
     allergens: string[];
 };
 
-export const startersItems: Item[] = [
-    { id: '1', name: 'Bogdans Cheese Sticks', allergens: ["gluten", "dairy"] },
-    { id: '2', name: 'Lithuania', allergens: ['dairy', 'european', 'gluten', 'soy'] },
-    { id: '3', name: 'Worst Case Scenario', allergens: ['dairy', 'dovydas', 'React Native Expo Go', 'dairy again'] },
+export const afternoonTeaItems: Item[] = [
+    { id: '1', name: 'Savoury scone', allergens: ['Savoury'] },
+    { id: '2', name: 'Quiche', allergens: ['Savoury'] },
+    { id: '3', name: 'Sausage roll', allergens: ['Savoury'] },
+    { id: '4', name: 'Selection of Sandwiches', allergens: ['Savoury'] },
+    { id: '5', name: 'Rock cake', allergens: ['Sweet'] },
+    { id: '6', name: 'French Madeleine', allergens: ['Sweet'] },
+    { id: '7', name: 'Macaron', allergens: ['Sweet'] },
+    { id: '8', name: 'Cupcake', allergens: ['Sweet'] },
+    { id: '9', name: 'Tea / Coffe Pot', allergens: ['Drinks'] },
 ];
 
 export const mainsItems: Item[] = [
-    { id: '1', name: 'Dovydas Special', allergens: ["dovydas", "unknown"] },
-    { id: '2', name: 'Goop Sandwich', allergens: ['bogdan', 'dovydas', 'gluten', 'soy', 'dairy'] },
-    { id: '3', name: 'Anaphylactic Shock', allergens: ['its just an epipen bro'] },
-    { id: '4', name: 'Kanes Rice', allergens: ['none'] },
-    { id: '5', name: 'Nikkis Rice', allergens: ['kanes hair'] },
-    { id: '6', name: '3 Shots of Vodka', allergens: ['dairy', 'Hangover'] },
-    { id: '7', name: 'COFF', allergens: ['dovydas', 'bogdan', 'nikki', 'kane'] },
+    { id: '1', name: 'Soup', allergens: [] },
+    { id: '2', name: 'Quiche', allergens: [] },
+    { id: '3', name: 'Sandwich', allergens: [] },
+    { id: '4', name: 'Toastie', allergens: [] },
+    { id: '5', name: 'Panini', allergens: [] },
+    { id: '6', name: '3 Cheese Toastie', allergens: ['cheddar', 'mozzarella','hard cheese'] },
+    { id: '7', name: 'Chicken Fajita Wrap', allergens: ['chicken','roast pepper','red onion','cheese'] },
+    { id: '8', name: 'Poached Eggs', allergens: ['Bagel / Sourdough', 'addOns: beans, mushrooms, bacon, avocado'] },
+    { id: '9', name: 'Open Sourdough Bread Brie and Cranberry Sandwich', allergens: ['dovydas', 'bogdan', 'nikki', 'kane'] },
+    { id: '10', name: 'Home Made Granola', allergens: ["granola with Greek yogurt","seasonal fruit","maple syrup"] },
+];
+export const specialsItems: Item[] = [
+    { id: '1', name: 'Egg, cheese and bacon loaded bagel', allergens: [] },
+    { id: '2', name: 'Pulled pork bagel', allergens: [] },
+
+];
+export const addOnsItems: Item[] = [
+    { id: '1', name: 'Fillings', allergens: ['Sweet Chili Chicken','BBQ Chicken',"cheese","tuna","chicken mayo","BLT","ham"] },
+    { id: '2', name: 'AddOns', allergens: ['onion', 'sweetcorn', 'pineapple'] },
+    { id: '3', name: 'Iced Latte', allergens: ['dairy', 'gluten', 'egg', 'soy', 'dovydas', 'bogdan', 'ice'] },
 ];
 export const drinksItems: Item[] = [
     { id: '1', name: 'Tap Water', allergens: ['none'] },
@@ -36,16 +55,20 @@ export const drinksItems: Item[] = [
 ];
 
 export const categories = [
-    { id: '1', name: 'Starters', items: startersItems},
-    { id: '2', name: 'Mains', items: mainsItems },
+    { id: '1', name: 'Mains', items: mainsItems },
+    { id: '2', name: 'Specials', items: specialsItems },
     { id: '3', name: 'Drinks', items: drinksItems },
+    { id: '4', name: 'Add Ons', items: addOnsItems },
+    { id: '5', name: 'Afternoon Tea', items: afternoonTeaItems },
 ];
 
 function Menu() {
 
   const colorScheme = useColorScheme();
   const C = colorScheme === 'dark' ? Colors.dark : Colors.light;
-  const [startersOpen, setStartersOpen] = useState(true);
+  const [afternoonTeasOpen, setAfternoonTeasOpen] = useState(true);
+  const [specialsOpen, setSpecialsOpen] = useState(true);
+  const [addOnsOpen, setAddOnsOpen] = useState(true);
   const [mainsOpen, setMainsOpen] = useState(true);
   const [drinksOpen, setDrinksOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
@@ -56,7 +79,7 @@ function Menu() {
 
     
 
-    const filteredStarters = startersItems.filter(item =>
+    const filteredAfternoonTea = afternoonTeaItems.filter(item =>
         item.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
@@ -66,6 +89,14 @@ function Menu() {
 
     const filteredDrinks = drinksItems.filter(item =>
         item.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+    const filteredAddOns = addOnsItems.filter(item =>
+    item.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+    const filteredSpecials = specialsItems.filter(item =>
+    item.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
   
@@ -113,29 +144,6 @@ function Menu() {
                     </View>
                         
                         <View style={[styles.category, { marginTop: 16 }]}>
-                            <Pressable
-                                onPress={() => setStartersOpen(!startersOpen)}
-                                style={{ flexDirection: "row", alignItems: "center", justifyContent: "flex-start" }}
-                            >
-                                <Text style={[styles.subheaderText, { paddingVertical: 10 }]}>
-                                    Starters
-                                </Text>
-
-                                <IconSymbol
-                                    name={startersOpen ? "chevron.down" : "chevron.right"}
-                                    size={18}
-                                    color={C.text}
-                                />
-                            </Pressable>
-                            {startersOpen &&
-                                filteredStarters.map((item) => (
-                                    <View key={item.id} style={styles.box}>
-                                    <Text style={styles.categoryHeader}>{item.name}</Text>
-                                    <Text style={styles.categoryBody}>{item.allergens.join(", ")}</Text>
-                                    </View>
-                                ))
-                            }
-
 
                             <Pressable
                                 onPress={() => setMainsOpen(!mainsOpen)}
@@ -180,6 +188,73 @@ function Menu() {
                                     <View key={item.id} style={styles.box}>
                                         <Text style={styles.categoryHeader}>{item.name}</Text>
                                         <Text style={styles.categoryBody}>{item.allergens.join(", ")}</Text>
+                                    </View>
+                                ))
+                            }
+                            <Pressable
+                                onPress={() => setSpecialsOpen(!specialsOpen)}
+                                style={{ flexDirection: "row", alignItems: "center", justifyContent: "flex-start" }}
+                            >
+                                <Text style={[styles.subheaderText, { paddingVertical: 10 }]}>
+                                    Specials
+                                </Text>
+
+                                <IconSymbol
+                                    name={specialsOpen ? "chevron.down" : "chevron.right"}
+                                    size={18}
+                                    color={C.text}
+                                />
+                            </Pressable>
+                            {specialsOpen &&
+                                filteredSpecials.map((item) => (
+                                    <View key={item.id} style={styles.box}>
+                                        <Text style={styles.categoryHeader}>{item.name}</Text>
+                                        <Text style={styles.categoryBody}>{item.allergens.join(", ")}</Text>
+                                    </View>
+                                ))
+                            }
+                            <Pressable
+                                onPress={() => setAddOnsOpen(!addOnsOpen)}
+                                style={{ flexDirection: "row", alignItems: "center", justifyContent: "flex-start" }}
+                            >
+                                <Text style={[styles.subheaderText, { paddingVertical: 10 }]}>
+                                    Add-Ons
+                                </Text>
+
+                                <IconSymbol
+                                    name={addOnsOpen ? "chevron.down" : "chevron.right"}
+                                    size={18}
+                                    color={C.text}
+                                />
+                            </Pressable>
+                            {addOnsOpen &&
+                                filteredAddOns.map((item) => (
+                                    <View key={item.id} style={styles.box}>
+                                        <Text style={styles.categoryHeader}>{item.name}</Text>
+                                        <Text style={styles.categoryBody}>{item.allergens.join(", ")}</Text>
+                                    </View>
+                                ))
+                            }
+
+                            <Pressable
+                                onPress={() => setAfternoonTeasOpen(!afternoonTeasOpen)}
+                                style={{ flexDirection: "row", alignItems: "center", justifyContent: "flex-start" }}
+                            >
+                                <Text style={[styles.subheaderText, { paddingVertical: 10 }]}>
+                                    Afternoon Teas
+                                </Text>
+
+                                <IconSymbol
+                                    name={afternoonTeasOpen ? "chevron.down" : "chevron.right"}
+                                    size={18}
+                                    color={C.text}
+                                />
+                            </Pressable>
+                            {afternoonTeasOpen &&
+                                filteredAfternoonTea.map((item) => (
+                                    <View key={item.id} style={styles.box}>
+                                    <Text style={styles.categoryHeader}>{item.name}</Text>
+                                    <Text style={styles.categoryBody}>{item.allergens.join(", ")}</Text>
                                     </View>
                                 ))
                             }
