@@ -46,12 +46,26 @@ export const specialsItems: Item[] = [
 export const addOnsItems: Item[] = [
     { id: '1', name: 'Fillings', allergens: ['Sweet Chili Chicken','BBQ Chicken',"cheese","tuna","chicken mayo","BLT","ham"] },
     { id: '2', name: 'AddOns', allergens: ['onion', 'sweetcorn', 'pineapple'] },
-    { id: '3', name: 'Iced Latte', allergens: ['dairy', 'gluten', 'egg', 'soy', 'dovydas', 'bogdan', 'ice'] },
+    { id: '3', name: 'Syrup', allergens: [] },
 ];
 export const drinksItems: Item[] = [
-    { id: '1', name: 'Tap Water', allergens: ['none'] },
-    { id: '2', name: 'Nesquick Milkshake', allergens: ['dairy', 'gluten', 'egg'] },
-    { id: '3', name: 'Iced Latte', allergens: ['dairy', 'gluten', 'egg', 'soy', 'dovydas', 'bogdan', 'ice'] },
+    { id: '1', name: 'Latte', allergens: ['none'] },
+    { id: '2', name: 'Americano', allergens: [] },
+    { id: '3', name: 'Coffee Pot', allergens: [] },
+    { id: '4', name: 'Tea Pot', allergens: [] },
+    { id: '5', name: 'Americano', allergens: [] },
+    { id: '6', name: 'Iced Latte', allergens: [] },
+    { id: '7', name: 'Matcha', allergens: [] },
+    { id: '8', name: 'Iced Matcha', allergens: [] },
+    { id: '9', name: 'Chai Latte', allergens: [] },
+    { id: '10', name: 'Boba', allergens: [] },
+    { id: '11', name: 'Can', allergens: [] },
+    { id: '12', name: 'Juice', allergens: [] },
+    { id: '13', name: 'Milk', allergens: [] },
+    { id: '14', name: 'Milkshake', allergens: [] },
+    { id: '15', name: 'Flat White', allergens: [] },
+    { id: '16', name: 'Espresso', allergens: [] },
+    { id: '17', name: 'Double Espresso', allergens: [] },
 ];
 
 export const categories = [
