@@ -1,0 +1,13 @@
+[Unit]
+Description=Printer Server
+After=multi-user.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/raspberry/PrinterStuff
+ExecStart=/home/raspberry/PrinterStuff/my_env/bin/python /home/raspberry/PrinterStuff/PrinterServer.py
+Enviroment="PATH=/home/raspberry/PrinterStuff/my_env/bin"
+Restart=on-abort
+
+[Install]
+WantedBy=multi-user.target
